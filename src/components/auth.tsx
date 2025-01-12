@@ -19,13 +19,19 @@ export function Auth() {
   const [message, setMessage] = useState<string | null>(null);
   const [showOtpInput, setShowOtpInput] = useState(false);
 
+  const formatPhoneNumber = (phone: string) => {
+    return phone.startsWith("0") ? `+254${phone.slice(1)}` : `+254${phone}`;
+  };
+
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
+    const phoneNo = formatPhoneNumber(phone);
+
     const { error } = await supabase.auth.signInWithOtp({
-      phone,
+      phone: phoneNo,
     });
 
     if (error) {
@@ -43,7 +49,7 @@ export function Auth() {
     setMessage(null);
 
     const { error } = await supabase.auth.verifyOtp({
-      phone,
+      phone: formatPhoneNumber(phone),
       token: otp,
       type: "sms",
     });
@@ -64,7 +70,7 @@ export function Auth() {
           <form onSubmit={handleSendOtp} className="space-y-4">
             <Input
               type="tel"
-              placeholder="Enter your phone number (+1234567890)"
+              placeholder="Enter your phone number (0712345678)"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
