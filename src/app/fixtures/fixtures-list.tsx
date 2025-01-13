@@ -22,8 +22,8 @@ export function FixturesList({ fixtures }: { fixtures: Fixture[] }) {
           homeTeam={fixture.title.split("vs")[0]}
           awayTeam={fixture.title.split("vs")[1]}
           competition="FA cup"
-          date={fixture.metadata.date.toDateString()}
-          time={fixture.metadata.date.toTimeString()}
+          date={new Date(fixture.metadata.date).toDateString()}
+          time={new Date(fixture.metadata.date).toTimeString()}
         />
       ))}
     </>
