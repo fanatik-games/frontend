@@ -5,7 +5,6 @@ import { H2HChallenge } from "@/components/h2h-challenge";
 import { Auth } from "@/components/auth";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
-import CreateH2h from "@/components/createh2h";
 import Link from "next/link";
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
@@ -28,7 +27,6 @@ export default function Home() {
         Challenges Created
       </Link>
       <main className="flex min-h-screen flex-col items-center justify-center p-6">
-        <CreateH2h />
         {user ? (
           <H2HChallenge
             homeTeam="Manchester United"
