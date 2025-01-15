@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Jersey_25 } from "next/font/google";
 
 const jerseyFont = Jersey_25({
@@ -5,10 +6,13 @@ const jerseyFont = Jersey_25({
   weight: "400",
 });
 
-export default function Logo() {
+export default function Logo({ className }: { className?: string }) {
   return (
     <div
-      className={`logo text-3xl font-bold font-mono ${jerseyFont.className}`}
+      className={cn(
+        `logo text-3xl font-bold font-mono ${jerseyFont.className}`,
+        className,
+      )}
     >
       Fanatix
     </div>

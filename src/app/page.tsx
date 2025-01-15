@@ -9,17 +9,17 @@ import { UserNav } from "./auth/_components/user-nav";
 import AccountTopUp from "@/components/account-top-up";
 
 export default function Home() {
-  const { session } = useAuth();
+  const { session, isAuthenticating } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (session) {
-      if (!session.user) {
-        router.push("/auth");
-      }
-      console.log("the session", session);
+    if (!session && !isAuthenticating) {
+      router.push("/auth");
     }
-  }, [session, session?.user, router]);
+    if (!isAuthenticating && session) {
+      if (!session.user) router.push("/auth");
+    }
+  }, [session, isAuthenticating, router]);
 
   return (
     <div>

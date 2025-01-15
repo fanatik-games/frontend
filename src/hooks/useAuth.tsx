@@ -2,9 +2,10 @@ import { AuthContext } from "@/providers/auth";
 import { useContext } from "react";
 
 export default function useAuth() {
-  const session = useContext(AuthContext);
+  const context = useContext(AuthContext);
 
   return {
-    session,
+    session: context?.session,
+    isAuthenticating: context?.isAuthenticating,
   };
 }
