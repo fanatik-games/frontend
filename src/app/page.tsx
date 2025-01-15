@@ -17,6 +17,7 @@ export default function Home() {
       if (!session.user) {
         router.push("/auth");
       }
+      console.log("the session", session);
     }
   }, [session, session?.user, router]);
 
