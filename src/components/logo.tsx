@@ -1,6 +1,7 @@
 import { Jersey_25 } from "next/font/google";
 
 const jerseyFont = Jersey_25({
+  subsets: ["latin"],
   weight: "400",
 });
 
