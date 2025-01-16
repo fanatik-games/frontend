@@ -16,6 +16,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { OTP_TOKEN_SIZE } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
+import { Provider } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -72,6 +73,15 @@ export function LoginForm() {
     setLoading(false);
   };
 
+  const handleSocialLogin = async (provider: Provider) => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+    });
+    if (error) {
+      setMessage(error.message);
+    }
+  };
+
   const showToast = () => {
     toast.info(
       "This feature is not yet available, for now login using your phone number",
@@ -106,7 +116,7 @@ export function LoginForm() {
                     Login with Apple
                   </Button>
                   <Button
-                    onClick={() => showToast()}
+                    onClick={() => handleSocialLogin("google")}
                     type="button"
                     variant="outline"
                     className="w-full"

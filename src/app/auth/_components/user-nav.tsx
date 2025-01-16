@@ -19,6 +19,15 @@ import { useState } from "react";
 export function UserNav({ user }: { user?: User }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  const getUserName = (user: User) => {
+    if (!user) return "Guest";
+    if (user.user_metadata && user.user_metadata.name) {
+      return user.user_metadata.name;
+    }
+
+    return "Anonymous: " + user.id.split("-")[0];
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,9 +44,11 @@ export function UserNav({ user }: { user?: User }) {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Felix</p>
+            <p className="text-sm font-medium leading-none font-mono">
+              <span className="text-xs">{getUserName(user!)}</span>
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user?.phone ?? user?.email ?? "m@example.com"}
+              {user?.email ? user.email : user?.phone}
             </p>
           </div>
         </DropdownMenuLabel>
