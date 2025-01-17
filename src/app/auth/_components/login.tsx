@@ -76,6 +76,9 @@ export function LoginForm() {
   const handleSocialLogin = async (provider: Provider) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
+      options: {
+        redirectTo: "/",
+      },
     });
     if (error) {
       setMessage(error.message);
