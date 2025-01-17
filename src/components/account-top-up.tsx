@@ -51,7 +51,7 @@ export default function AccountTopUp({ user }: { user?: User }) {
     } catch (error) {
       toast.error(
         "Error occured while topping up, try again later. Reason " +
-          (error as Error).message,
+          (error as Error).message
       );
     } finally {
       isToppingUp(false);

@@ -61,16 +61,14 @@ export function H2HChallenge({
     }
 
     try {
-      const { data, error } = await supabase
-        .from("predictions")
-        .insert([
-          {
-            user_id: user.id,
-            home_team: homeTeam,
-            away_team: awayTeam,
-            prediction,
-          },
-        ]);
+      const { data, error } = await supabase.from("predictions").insert([
+        {
+          user_id: user.id,
+          home_team: homeTeam,
+          away_team: awayTeam,
+          prediction,
+        },
+      ]);
 
       if (error) throw error;
 
