@@ -54,14 +54,15 @@ export function UserNav({ user }: { user?: User }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem className="flex flex-col justify-start items-start">
-            <Link href="/account" className="text-base text-neutral-600">
-              Account
-            </Link>
-            <div className="text-xs text-neutral-500 font-medium">
-              This is where you will be able to access your account information.
-            </div>
-          </DropdownMenuItem>
+          <Link href="/account">
+            <DropdownMenuItem className="flex flex-col justify-start items-start">
+              <span className="text-base text-neutral-600">Account</span>
+              <span className="text-xs text-neutral-500 font-medium">
+                This is where you will be able to access your account
+                information.
+              </span>
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>
             <Link href="/settings" className="text-base text-neutral-600">
               Settings
