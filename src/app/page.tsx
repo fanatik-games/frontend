@@ -1,43 +1,14 @@
 "use client";
-
-import useAuth from "@/hooks/useAuth";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import Logo from "@/components/logo";
-import { UserNav } from "./auth/_components/user-nav";
-import AccountTopUp from "@/components/account-top-up";
 import { ArrowRight, ChevronRight, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-
+import Header from "@/components/header";
 export default function Home() {
-  const { session, isAuthenticating } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!session && !isAuthenticating) {
-      router.push("/auth");
-    }
-    if (!isAuthenticating && session) {
-      if (!session.user) router.push("/auth");
-    }
-  }, [session, isAuthenticating, router]);
-
   return (
     <div>
-      <nav className="py-2 bg-accent/10 border-b border-accent sticky top-0">
-        <div className="container px-2 md:px-0 mx-auto flex justify-between">
-          <Link href="/">
-            <Logo />
-          </Link>
-          <div className="account-actions flex gap-3 items-center">
-            <AccountTopUp user={session?.user} />
-            <UserNav user={session?.user} />
-          </div>
-        </div>
-      </nav>
+      {/* header hapa */}
+      <Header />
       <main className="flex flex-col-reverse md:flex-row container mx-auto gap-6">
         <div className="left min-w-96 max-w-md max-h-screen px-2 md:px-0">
           <h4 className="py-2 font-medium text-sm">Today &apos;s Fixtures</h4>
