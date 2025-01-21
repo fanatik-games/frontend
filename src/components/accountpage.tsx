@@ -10,16 +10,22 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, XCircle, Wallet } from "lucide-react";
+import { Trophy, XCircle, Wallet, Copy } from "lucide-react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 const AccountPage = () => {
+  const leaderboardData = [
+    { rank: "#1", name: "Benji", amount: "Ksh 1000" },
+    { rank: "#2", name: "Ayee Yooh", amount: "Ksh 950" },
+    { rank: "#3", name: "You", amount: "Ksh 145" },
+  ];
   return (
-    <div className="p-4 min-h-screen">
+    // p-4 min-h-screen
+    <div className="container px-2 md:px-0 mx-auto mt-4">
       {/* kaprofile x activities x notification */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* profile */}
-        <div className="bg-white rounded-lg shadow-md p-6 max-w-md">
+        <div className="bg-white rounded-lg p-6 max-w-md border border-gray-200">
           <div className="flex items-center space-x-4 justify-between">
             <div>
               <h2 className="text-lg font-bold">Anto Ducci</h2>
@@ -102,11 +108,33 @@ const AccountPage = () => {
               </DialogContent>
             </Dialog>
           </div>
+          {/* goals */}
+          <div>
+            <div className="bg-white p-4 rounded-lg shadow-sm mt-4">
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                Achieve this to withdraw
+              </h2>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-gray-700">
+                    Earn ksh 1000 to be able to withdraw
+                  </p>
+                  <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                    <div
+                      className="bg-green-500 h-2 rounded-full"
+                      style={{ width: "15%" }}
+                    ></div>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">Ksh145 Earned</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         {/* activities X notification */}
-        <div className="flex flex-col space-y-4 items-center">
+        <div className="flex flex-col space-y-4 items-center border border-gray-200">
           {/* activities */}
-          <div className="bg-white p-4 rounded-lg shadow-md mb-6 w-full">
+          <div className="bg-white p-4 rounded-lg mb-6 w-full">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               Recent Activities
             </h2>
@@ -122,7 +150,7 @@ const AccountPage = () => {
                   label: "Participated:",
                   date: "Jan 15, 2025",
                   amount: "Completed",
-                  amountStyle: "text-yellow-500",
+                  amountStyle: "text-green-400",
                 },
                 {
                   label: "Invite Reward:",
@@ -145,7 +173,7 @@ const AccountPage = () => {
             </ul>
           </div>
           {/* notification */}
-          <div className="bg-white p-4 rounded-lg shadow-sm m-6 w-full">
+          <div className="bg-white p-4 rounded-lg m-6 w-full">
             <h2 className="text-lg font-semibold text-gray-800 mb-2">
               Notifications
             </h2>
@@ -170,7 +198,7 @@ const AccountPage = () => {
           </div>
         </div>
         {/* invite */}
-        <div className="bg-gray-100 p-6 rounded-lg shadow-md max-w-md md:flex-1 mt-4">
+        <div className="bg-gray-100 p-6 rounded-lg max-w-md w-full">
           <div className="flex items-center mb-4">
             <Avatar className="w-12 h-12">
               <AvatarImage src="/path/to/avatar.jpg" alt="User Avatar" />
@@ -191,11 +219,11 @@ const AccountPage = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
             <p className="text-gray-800 font-medium mb-2">Your Referral Link</p>
             <div className="flex items-center justify-between border border-gray-300 rounded-md px-3 py-2">
-              <span className="text-xs md:text-sm text-gray-600 truncate">
+              <span className="text-xs text-gray-600 truncate">
                 https://fantitk.com/auth?referral-code=12ICKGLG
               </span>
               <button className="text-blue-600 text-sm font-medium hover:underline">
-                Copy
+                <Copy className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -207,72 +235,50 @@ const AccountPage = () => {
             </div>
             <div className="flex items-center justify-between">
               <p className="text-gray-800 font-medium">Total Referrals</p>
-              <span className="text-gray-600 text-sm">0</span>
+              <span className="text-gray-600 text-sm">2</span>
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow-sm">
+          <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
             <div className="flex items-center justify-between">
               <p className="text-gray-800 font-medium">FCPs Coins Earned</p>
-              <span className="text-gray-600 text-sm">0</span>
+              <span className="text-gray-600 text-sm">100</span>
             </div>
           </div>
-        </div>
-      </div>
-      {/* goals */}
-      <div>
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">
-            Your Goals
-          </h2>
-          <div className="space-y-3">
-            <div>
-              <p className="text-gray-700">
-                Refer 10 Friends And Earn extra ksh 500
-              </p>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                <div
-                  className="bg-blue-500 h-2 rounded-full"
-                  style={{ width: "20%" }}
-                ></div>
-              </div>
-              <p className="text-sm text-gray-500 mt-1">
-                2/10 Friends Referred
-              </p>
+          {/* achievenent for refering */}
+          <div>
+            <p className="text-gray-700">
+              Refer 10 Friends And Earn extra ksh 500
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+              <div
+                className="bg-blue-500 h-2 rounded-full"
+                style={{ width: "20%" }}
+              ></div>
             </div>
-            <div>
-              <p className="text-gray-700">
-                Earn ksh 1000 to be able to withdraw
-              </p>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                <div
-                  className="bg-green-500 h-2 rounded-full"
-                  style={{ width: "15%" }}
-                ></div>
-              </div>
-              <p className="text-sm text-gray-500 mt-1">$145 Earned</p>
-            </div>
+            <p className="text-sm text-gray-500 mt-1">2/10 Friends Referred</p>
           </div>
         </div>
       </div>
       {/* leaderboard */}
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">
-          Leaderboard
+      <div className="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl shadow-md mt-3">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+          Last Winners
         </h2>
-        <ul className="space-y-2">
-          <li className="flex justify-between text-gray-700">
-            <span>#1 Benji</span>
-            <span className="text-green-600 font-semibold">Ksh 1000</span>
-          </li>
-          <li className="flex justify-between text-gray-700">
-            <span>#2 Ayee Yooh</span>
-            <span className="text-green-600 font-semibold">Ksh 950</span>
-          </li>
-          <li className="flex justify-between text-gray-700">
-            <span>#3 You</span>
-            <span className="text-green-600 font-semibold">Ksh 145</span>
-          </li>
+        <ul className="space-y-3">
+          {leaderboardData.map((entry, index) => (
+            <li
+              key={index}
+              className="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-200"
+            >
+              <span className="font-medium text-gray-800">
+                {entry.rank} {entry.name}
+              </span>
+              <span className="text-green-700 font-semibold">
+                {entry.amount}
+              </span>
+            </li>
+          ))}
         </ul>
       </div>
     </div>
