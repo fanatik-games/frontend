@@ -20,7 +20,7 @@ const Header = () => {
   }, [session, isAuthenticating, router]);
 
   return (
-    <nav className="py-2 bg-accent/10 border-b border-accent sticky top-0">
+    <nav className="py-2 z-10 bg-background border-b border-accent sticky top-0">
       <div className="container px-2 md:px-0 mx-auto flex justify-between">
         <Link href="/">
           <Logo />
