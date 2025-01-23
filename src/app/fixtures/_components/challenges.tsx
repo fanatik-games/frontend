@@ -2,27 +2,20 @@
 
 import CreateH2h from "@/components/createh2h";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { API_URL } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Clock, PlusIcon } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
+
+interface Challenge {
+  title: string;
+  fixtures: {
+    metadata: {
+      tournament: string;
+      date: string;
+    };
+    title: string;
+  };
+}
 
 export default function OngoingChallenges() {
   const { data } = useQuery({
@@ -30,6 +23,7 @@ export default function OngoingChallenges() {
     queryFn: () =>
       fetch(API_URL + `/fixtures/challenges`).then((res) => res.json()),
   });
+
   return (
     <div className="space-y-2 my-2">
       <div className="flex items-center justify-between">
@@ -40,7 +34,7 @@ export default function OngoingChallenges() {
       </div>
       <div className="grid md:grid-cols-2 gap-2">
         {data &&
-          data.challenges.map((challenge: any, index: number) => (
+          data.challenges.map((challenge: Challenge, index: number) => (
             <div
               key={index}
               className="challenge border rounded-lg flex flex-col gap-1 py-2"

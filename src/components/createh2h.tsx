@@ -35,6 +35,16 @@ type ChallengeData = {
   prediction: string;
 };
 
+type Fixture = {
+  title: string;
+  markets: Market[];
+};
+
+type Market = {
+  title: string;
+  outcomes: string[];
+};
+
 export default function CreateH2h() {
   const [challenge, setChallenge] = useState<ChallengeData[]>([]);
   const [data, setData] = useState<ChallengeData>({
@@ -44,24 +54,20 @@ export default function CreateH2h() {
     amount: "",
     prediction: "",
   });
-  const { data: fixtures } = useQuery({
+  const { data: fixtures } = useQuery<Fixture[]>({
     queryKey: ["fixtures"],
     queryFn: () => fetch(API_URL + "/fixtures").then((res) => res.json()),
   });
-  const [selectedFixture, setSelectedFixture] = useState();
-  const [fixturesMap, setFixturesMap] = useState({});
+  const [selectedFixture, setSelectedFixture] = useState<Market | null>(null);
+  const [fixturesMap, setFixturesMap] = useState<Record<string, Market[]>>({});
 
   useEffect(() => {
     if (!fixtures) return;
-    const fixturesMap = {};
+    const fixturesMap: Record<string, Market[]> = {};
     fixtures.forEach((fixture) => {
       fixturesMap[fixture.title] = [...fixture.markets];
     });
     setFixturesMap(fixturesMap);
-    // const titles = fixtures
-    //   .map((fx) => fx.markets)
-    //   .flat()
-    //   .map((f) => f.title);
   }, [fixtures]);
 
   const handleChange = (field: keyof ChallengeData, value: string) => {

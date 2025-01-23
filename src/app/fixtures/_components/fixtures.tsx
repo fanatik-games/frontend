@@ -5,8 +5,17 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRight, Clock } from "lucide-react";
 
+interface Fixture {
+  metadata: {
+    competition: string;
+    date: string;
+  };
+  title: string;
+  markets: Record<string, string>[];
+}
+
 export default function Fixtures() {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<Fixture[]>({
     queryKey: ["fixtures"],
     queryFn: () => fetch(API_URL + "/fixtures").then((res) => res.json()),
   });
@@ -22,7 +31,7 @@ export default function Fixtures() {
   return (
     <div>
       {data &&
-        data.map((fixture: any, index: number) => (
+        data.map((fixture, index) => (
           <div
             key={index}
             className={cn("flex gap-1 flex-col py-3", {
