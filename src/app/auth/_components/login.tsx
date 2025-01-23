@@ -77,7 +77,7 @@ export function LoginForm() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: "/",
+        redirectTo: "https://app.fanatix.games",
       },
     });
     if (error) {
