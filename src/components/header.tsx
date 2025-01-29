@@ -1,5 +1,4 @@
 "use client";
-import Logo from "@/components/logo";
 import { UserNav } from "@/app/auth/_components/user-nav";
 import AccountTopUp from "@/components/account-top-up";
 import Link from "next/link";

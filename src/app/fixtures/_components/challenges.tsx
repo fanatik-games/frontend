@@ -5,16 +5,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
+import Image from "next/image";
 
 export default function OngoingChallenges() {
   return (
     <div className=" mx-auto p-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 rounded-md border-border border-[1px] w-fit p-1 ">
-        <div className="bg-orange-500 px-6 py-2 rounded-lg font-semibold">
+      <div className="flex items-center justify-between mb-2 rounded-md border-border border-[1px] w-fit p-1 ">
+        <div className="bg-orange-500 text-primary px-6 text-xs py-2 rounded-lg font-semibold">
           H2H Duels
         </div>
-        <div className="text-gray-400 px-6 py-2">Group Challenges</div>
+        <div className="text-muted px-6 py-2">Group Challenges</div>
       </div>
 
       {/* Search and Create */}
@@ -83,8 +84,14 @@ export default function OngoingChallenges() {
             ].map((item, index) => (
               <div key={index} className="bg-accent p-4 rounded-lg">
                 <h3 className="font-semibold mb-3">{item.title}</h3>
-                <div className="text-sm text-muted mb-1">
-                  Stake Amount: <span className="text-yellow-500">★</span>{" "}
+                <div className="text-sm text-muted mb-1 flex  gap-4">
+                  Stake Amount:{" "}
+                  <Image
+                    width="12"
+                    height="12"
+                    src="https://img.icons8.com/arcade/64/coins--v1.png"
+                    alt="coins--v1"
+                  />{" "}
                   {item.stake}
                 </div>
                 <div className="text-sm text-muted mb-1">
