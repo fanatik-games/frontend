@@ -1,4 +1,5 @@
 "use client";
+import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -93,8 +94,11 @@ export function LoginForm() {
   return (
     <div className="flex flex-col gap-6">
       <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+        <CardHeader className=" flex gap-2 flex-col ">
+          <Logo className="w-20 h-5" />
+          <CardTitle className="text-xl text-primary text-bold">
+            Welcome Back
+          </CardTitle>
           <CardDescription>
             Glad to see you again! Let&apos;s get you back in the game.
           </CardDescription>
@@ -103,61 +107,109 @@ export function LoginForm() {
           {!showOtpInput ? (
             <form onSubmit={handleSendOtp}>
               <div className="grid gap-6">
-                <div className="flex flex-col gap-4">
-                  <Button
-                    onClick={() => showToast()}
-                    variant="outline"
-                    type="button"
-                    className="w-full"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                      <path
-                        d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Login with Apple
-                  </Button>
-                  <Button
-                    onClick={() => handleSocialLogin("google")}
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                      <path
-                        d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Login with Google
-                  </Button>
-                </div>
-                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                  <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                    Continue with phone number
-                  </span>
-                </div>
                 <div className="grid gap-6">
                   <div className="grid gap-2">
-                    <Label htmlFor="email">Phone Number</Label>
+                    <Label
+                      htmlFor="email"
+                      className=" font-semibold text-primary"
+                    >
+                      Enter your phone number
+                    </Label>
                     <Input
                       id="tel"
                       type="tel"
                       placeholder="Example: 0720123234"
                       onChange={(e) => setPhone(e.target.value)}
+                      className=" border-border text-muted focus-visible:border-border focus-visible:ring-0 bg-accent "
                     />
                   </div>
 
-                  <Button type="submit" className="w-full">
-                    Continue
+                  <Button
+                    type="submit"
+                    className="w-full text primary-foreground font-bold "
+                  >
+                    Continue with phone number
                   </Button>
                 </div>
-                <div className="text-center text-sm">
-                  Don&apos;t have an account?{" "}
-                  <a href="#" className="underline underline-offset-4">
-                    Sign up
-                  </a>
+                {/* or */}
+                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                  <span className="relative z-10 bg-background px-2 text-muted-foreground font-semibold">
+                    OR
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <Button
+                    onClick={() => handleSocialLogin("google")}
+                    type="button"
+                    variant="outline"
+                    className="w-full border-primary text-primary font-bold"
+                  >
+                    <svg
+                      width="19"
+                      height="18"
+                      viewBox="0 0 19 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_623_41)">
+                        <path
+                          d="M18.7736 9.16838C18.7736 8.43093 18.7104 7.89279 18.5737 7.33472H9.68494V10.6632H14.9025C14.7973 11.4904 14.2293 12.7361 12.9669 13.5732L12.9492 13.6846L15.7597 15.7472L15.9544 15.7657C17.7427 14.201 18.7736 11.899 18.7736 9.16838Z"
+                          fill="#4285F4"
+                        />
+                        <path
+                          d="M9.68496 17.9381C12.2411 17.9381 14.387 17.1408 15.9544 15.7656L12.967 13.5731C12.1675 14.1013 11.0945 14.47 9.68496 14.47C7.18138 14.47 5.0565 12.9055 4.29904 10.7429L4.18801 10.7519L1.26563 12.8945L1.22742 12.9951C2.78426 15.925 5.98213 17.9381 9.68496 17.9381Z"
+                          fill="#34A853"
+                        />
+                        <path
+                          d="M4.29898 10.7431C4.09911 10.185 3.98345 9.58704 3.98345 8.9692C3.98345 8.35129 4.09911 7.75338 4.28846 7.19531L4.28317 7.07645L1.32417 4.89941L1.22736 4.94304C0.585709 6.15886 0.217529 7.52419 0.217529 8.9692C0.217529 10.4142 0.585709 11.7795 1.22736 12.9953L4.29898 10.7431Z"
+                          fill="#FBBC05"
+                        />
+                        <path
+                          d="M9.68495 3.46802C11.4627 3.46802 12.6619 4.19551 13.3456 4.80346L16.0175 2.33196C14.3766 0.886946 12.2411 0 9.68495 0C5.98213 0 2.78426 2.01305 1.22742 4.94292L4.28852 7.19519C5.0565 5.03265 7.18138 3.46802 9.68495 3.46802Z"
+                          fill="#EB4335"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_623_41">
+                          <rect width="19" height="18" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                    Login with Google
+                  </Button>
+                  <Button
+                    onClick={() => showToast()}
+                    variant="outline"
+                    type="button"
+                    className="w-full border-primary text-primary font-bold"
+                  >
+                    <svg
+                      width="19"
+                      height="18"
+                      viewBox="0 0 19 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g clip-path="url(#clip0_623_39)">
+                        <path
+                          d="M14.6852 9.56283C14.7119 12.2868 17.2076 13.1933 17.2353 13.2048C17.2141 13.2687 16.8365 14.4966 15.9204 15.7649C15.1285 16.8615 14.3066 17.9539 13.0118 17.9766C11.7396 17.9988 11.3306 17.2619 9.87606 17.2619C8.42201 17.2619 7.9675 17.954 6.76321 17.9988C5.51346 18.0436 4.56176 16.8131 3.7633 15.7206C2.13167 13.4858 0.884773 9.4057 2.55904 6.65155C3.39078 5.28383 4.87717 4.41773 6.49051 4.39552C7.71773 4.37334 8.87605 5.1777 9.6263 5.1777C10.3761 5.1777 11.7837 4.21039 13.2635 4.35245C13.883 4.37688 15.6219 4.58952 16.7385 6.13794C16.6486 6.19078 14.6636 7.28549 14.6852 9.56283ZM12.2942 2.87397C12.9577 2.1131 13.4043 1.0539 13.2825 0C12.3261 0.0364156 11.1696 0.603766 10.4836 1.36422C9.86884 2.03763 9.33042 3.11548 9.4757 4.14852C10.5417 4.22665 11.6307 3.63532 12.2942 2.87397Z"
+                          fill="black"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_623_39">
+                          <rect width="19" height="18" fill="white" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                    Login with Apple
+                  </Button>
+                </div>
+                <div className="text-full text-primary text-xs  [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
+                  By clicking continue, you agree to our{" "}
+                  <a href="#">Terms of Service</a> and{" "}
+                  <a href="#">Privacy Policy</a>.
                 </div>
               </div>
             </form>
@@ -205,10 +257,6 @@ export function LoginForm() {
           </p>
         )}
       </Card>
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </div>
     </div>
   );
 }
