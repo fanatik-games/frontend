@@ -8,7 +8,7 @@ export default function Home() {
     <div>
       {/* header hapa */}
       <Header />
-      <main className="flex flex-col  md:flex-row  mx-auto w-full  gap-6 px-4">
+      <main className="flex flex-col h-fit md:flex-row  mx-auto w-full  gap-6 px-4 py-3">
         <div className="md:px-0">
           <h4 className="py-2 font-semibold text-2xl ">
             Today &apos;s Fixtures

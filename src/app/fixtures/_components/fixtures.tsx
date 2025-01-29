@@ -71,8 +71,8 @@ export default function Fixtures() {
                   <div className="text-sm text-muted font-semibold flex  gap-2">
                     Current Pot Price:{" "}
                     <Image
-                      width="14"
-                      height="14"
+                      width="10"
+                      height="10"
                       src="https://img.icons8.com/arcade/64/coins--v1.png"
                       alt="coins--v1"
                     />{" "}
