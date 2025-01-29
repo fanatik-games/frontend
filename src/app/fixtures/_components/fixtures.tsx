@@ -17,6 +17,7 @@ export default function Fixtures() {
     queryKey: ["fixtures"],
     queryFn: () => fetch(API_URL + "/fixtures").then((res) => res.json()),
   });
+  console.log(data, "data");
 
   if (error) {
     return <div>Error: Could not fetch fixtures</div>;
@@ -71,7 +72,7 @@ export default function Fixtures() {
 
   return (
     <div className="w-full max-w-md">
-      {matches.map((match, index) => (
+      {data.map((match, index) => (
         <div
           key={index}
           className={` flex mb-3 hover:shadow-lg transition-shadow ${index !== matches.length - 1 ? "border-b-[1px]" : ""} px-0`}
@@ -81,12 +82,14 @@ export default function Fixtures() {
               <div className="flex flex-col gap-1">
                 <div className=" space-y-2">
                   <div className="text-xs font-bold  flex gap-1 ">
-                    <span className=" text-muted">{match.league}</span>
-                    {match.date} {match.time}
+                    <span className=" text-muted">
+                      {match.metadata.competition}
+                    </span>
+                    {match.metadata.date}
                   </div>
                   {/* soccer  icon*/}
                   <div className=" flex gap-2 font-semibold text-md items-center">
-                    ⚽ {match.homeTeam} vs {match.awayTeam}
+                    ⚽ {match.title}
                   </div>
                 </div>
                 <div className="">
@@ -98,11 +101,11 @@ export default function Fixtures() {
                       src="https://img.icons8.com/arcade/64/coins--v1.png"
                       alt="coins--v1"
                     />{" "}
-                    {match.pot}
+                    {/* {match.pot} */}
                   </div>
                 </div>
                 <div className="flex text-muted font-semibold">
-                  <p>Market: 3</p>
+                  <p>Market: {}</p>
                 </div>
               </div>
             </div>

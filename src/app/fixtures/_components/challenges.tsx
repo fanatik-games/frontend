@@ -11,11 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
-import Image from "next/image";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { API_URL } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import Image from "next/image";
 
 interface Challenge {
   title: string;
@@ -33,7 +33,8 @@ export default function OngoingChallenges() {
     queryFn: () =>
       fetch(API_URL + `/fixtures/challenges`).then((res) => res.json()),
   });
-  const [active, setActive] = React.useState(false);
+  console.log(data, "data");
+  const [active] = React.useState(false);
 
   return (
     <div className=" mx-auto p-4 bg-[#FDFCFC] flex flex-col">
@@ -56,11 +57,11 @@ export default function OngoingChallenges() {
         <TabsContent value="H2H Duels" className="max-w-5xl">
           <Card>
             <CardHeader>
-              <CardTitle className=" text-primary">H2H Duels</CardTitle>
+              {/* <CardTitle className=" text-primary">H2H Duels</CardTitle>
               <CardDescription>
                 Challenge your friends in one-on-one duels and compete for
                 points.
-              </CardDescription>
+              </CardDescription> */}
             </CardHeader>
             <CardContent className="space-y-2">
               {/*  */}
@@ -79,64 +80,30 @@ export default function OngoingChallenges() {
               {/* Match Details */}
               <Card className="mb-6">
                 <CardContent className="p-4">
-                  <div className="flex flex-col gap-2 mb-4">
-                    <span className="text-black text-sm flex gap-1 font-semibold">
-                      <span className=" text-muted">EPL</span>05/02/2025 3:00
-                      p.m
-                    </span>
-                    <div className="flex items-center">
-                      <span className="font-semibold">
-                        {" "}
-                        ⚽ Arsenal vs Man City
-                      </span>
-                    </div>
-                  </div>
+                  {data && data.challenges.length > 0 && (
+                    <div key={0} className="mb-4">
+                      <div className="flex flex-col gap-2 mb-4">
+                        <span className="text-black text-sm flex gap-1 font-semibold">
+                          <span className=" text-muted">
+                            {data.challenges[0].fixtures.metadata.tournament}
+                          </span>
+                          {data.challenges[0].fixtures.metadata.date}
+                        </span>
+                        <div className="flex items-center">
+                          <span className="font-semibold">
+                            {" "}
+                            ⚽ {data.challenges[0].fixtures.title}
+                          </span>
+                        </div>
+                      </div>
 
-                  {/* Prediction Grid */}
-                  <ScrollArea className="h-[45vh]">
-                    <ScrollBar />
-                    <div className="grid grid-cols-2 gap-4">
-                      {[
-                        {
-                          title: "Match Outcome",
-                          stake: "1500.00 F.C",
-                          creator: "Admin",
-                          prediction: "Home Win",
-                        },
-                        {
-                          title: "Both Teams To Score",
-                          stake: "1500.00 F.C",
-                          creator: "Admin",
-                          prediction: "YES",
-                        },
-                        {
-                          title: "Will Kai Havertz Score ?",
-                          stake: "1500.00 F.C",
-                          creator: "Admin",
-                          prediction: "YES",
-                        },
-                        {
-                          title: "Both Teams To Score",
-                          stake: "1500.00 F.C",
-                          creator: "Admin",
-                          prediction: "YES",
-                        },
-                        {
-                          title: "Match Outcome",
-                          stake: "1500.00 F.C",
-                          creator: "Admin",
-                          prediction: "Home Win",
-                        },
-                        {
-                          title: "Who wins the 1st half",
-                          stake: "1500.00 F.C",
-                          creator: "Admin",
-                          prediction: "Home Win",
-                        },
-                      ].map((item, index) => (
-                        <div key={index} className="bg-accent p-4 rounded-lg">
-                          <h3 className="font-semibold mb-3">{item.title}</h3>
-                          <div className="text-sm text-muted mb-1 flex gap-2">
+                      <ScrollArea className="h-[45vh]">
+                        <ScrollBar />
+                        <div className="grid grid-cols-2 gap-4">
+                          <h3 className="font-semibold mb-3">
+                            {data.challenges[0].title}
+                          </h3>
+                          <div className="text-sm text-muted mb-1 flex gap-2 items-center">
                             Stake Amount:{" "}
                             <Image
                               width="25"
@@ -144,21 +111,16 @@ export default function OngoingChallenges() {
                               src="https://img.icons8.com/arcade/64/coins--v1.png"
                               alt="coins--v1"
                             />{" "}
-                            {item.stake}
                           </div>
-                          <div className="text-sm text-muted mb-1">
-                            Created By: {item.creator}
-                          </div>
-                          <div className="text-sm text-muted mb-3">
-                            Prediction: {item.prediction}
-                          </div>
+                          <div className="text-sm text-muted mb-1"></div>
+                          <div className="text-sm text-muted mb-3"></div>
                           <Button className="w-full bg-primary hover:bg-blue-primay text-primary-foreground">
                             Join Challenge
                           </Button>
                         </div>
-                      ))}
+                      </ScrollArea>
                     </div>
-                  </ScrollArea>
+                  )}
                 </CardContent>
               </Card>
             </CardContent>
