@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Inter } from "next/font/google";
+import { Jersey_25 } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/providers/auth";
 import { Toaster } from "@/components/ui/sonner";
 import ReactQueryProvider from "@/providers/react-query";
 
-const inter = Inter({
-  variable: "--font-inter-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jersey = Jersey_25({
+  variable: "--font-jersey",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -28,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${jersey.variable} antialiased`}>
         <ReactQueryProvider>
           <AuthProvider>{children}</AuthProvider>
         </ReactQueryProvider>
