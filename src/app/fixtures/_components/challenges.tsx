@@ -1,98 +1,106 @@
 "use client";
 
-import CreateH2h from "@/components/createh2h";
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { API_URL } from "@/lib/constants";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Clock } from "lucide-react";
-
-interface Challenge {
-  title: string;
-  fixtures: {
-    metadata: {
-      tournament: string;
-      date: string;
-    };
-    title: string;
-  };
-}
+import { Input } from "@/components/ui/input";
+import { Plus } from "lucide-react";
 
 export default function OngoingChallenges() {
-  const { data } = useQuery({
-    queryKey: ["challenges"],
-    queryFn: () =>
-      fetch(API_URL + `/fixtures/challenges`).then((res) => res.json()),
-  });
-
   return (
-    <div className="space-y-2 my-2">
-      <div className="flex items-center justify-between">
-        <h4 className="font-medium text-sm">Ongoing Challenges</h4>
-        <div className="flex justify-end">
-          <CreateH2h />
+    <div className=" mx-auto p-4">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6 rounded-md border-border border-[1px] w-fit p-1 ">
+        <div className="bg-orange-500 px-6 py-2 rounded-lg font-semibold">
+          H2H Duels
         </div>
+        <div className="text-gray-400 px-6 py-2">Group Challenges</div>
       </div>
-      <div className="grid md:grid-cols-2 gap-2">
-        {data &&
-          data.challenges.map((challenge: Challenge, index: number) => (
-            <div
-              key={index}
-              className="challenge border rounded-lg flex flex-col gap-1 py-2"
-            >
-              <div className="title text-lg font-semibold px-4">
-                {challenge.title}
-              </div>
-              <div className="flex items-center gap-1 px-4 text-neutral-500 font-medium">
-                <div className="team-name text-sm">
-                  {challenge.fixtures.metadata.tournament}
+
+      {/* Search and Create */}
+      <div className="flex gap-4 mb-6 w-full justify-between">
+        <Input
+          placeholder="Search Duel ..."
+          className="bg-accent w-[40%] focus-visible:ring-0 border-border border-[1px] rounded-lg"
+        />
+        <Button className=" hover:bg-blue-800">
+          <Plus className="w-4 h-4" />
+          Create Duel
+        </Button>
+      </div>
+
+      {/* Match Details */}
+      <Card className="mb-6">
+        <CardContent className="p-4">
+          <div className="flex flex-col gap-2 mb-4">
+            <span className="text-gray-400 text-sm flex gap-1">
+              <span>EPL</span>05/02/2025 3:00 p.m
+            </span>
+            <div className="flex items-center">
+              <span className="font-semibold">Arsenal vs Man City</span>
+            </div>
+          </div>
+
+          {/* Prediction Grid */}
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              {
+                title: "Match Outcome",
+                stake: "1500.00 F.C",
+                creator: "Admin",
+                prediction: "Home Win",
+              },
+              {
+                title: "Both Teams To Score",
+                stake: "1500.00 F.C",
+                creator: "Admin",
+                prediction: "YES",
+              },
+              {
+                title: "Will Kai Havertz Score ?",
+                stake: "1500.00 F.C",
+                creator: "Admin",
+                prediction: "YES",
+              },
+              {
+                title: "Both Teams To Score",
+                stake: "1500.00 F.C",
+                creator: "Admin",
+                prediction: "YES",
+              },
+              {
+                title: "Match Outcome",
+                stake: "1500.00 F.C",
+                creator: "Admin",
+                prediction: "Home Win",
+              },
+              {
+                title: "Who wins the 1st half",
+                stake: "1500.00 F.C",
+                creator: "Admin",
+                prediction: "Home Win",
+              },
+            ].map((item, index) => (
+              <div key={index} className="bg-accent p-4 rounded-lg">
+                <h3 className="font-semibold mb-3">{item.title}</h3>
+                <div className="text-sm text-muted mb-1">
+                  Stake Amount: <span className="text-yellow-500">★</span>{" "}
+                  {item.stake}
                 </div>
-                <div className="time items-center flex gap-1 text-sm">
-                  <Clock size={12} />
-                  {new Date(
-                    challenge.fixtures.metadata.date,
-                  ).toLocaleTimeString()}
+                <div className="text-sm text-muted mb-1">
+                  Created By: {item.creator}
                 </div>
-              </div>
-              <div className="team-name text-base font-medium px-4">
-                {challenge.fixtures.title}
-              </div>
-              <div className="flex items-center gap-1 px-4 text-neutral-500 font-medium">
-                <div className="team-name text-sm">Stake Amount: </div>
-                <div className="time items-center flex gap-1 text-sm">
-                  2,500 KES
+                <div className="text-sm text-muted mb-3">
+                  Prediction: {item.prediction}
                 </div>
-              </div>
-              <div className="flex items-center gap-1 px-4 text-neutral-500 font-medium">
-                <div className="team-name text-sm bg-accent rounded-md px-2 py-1 font-semibold">
-                  opponent: sean
-                </div>
-                <div className="time items-center flex gap-1 text-sm px-2">
-                  <ArrowRight size={14} />{" "}
-                  <span className="uppercase text-md font-semibold">under</span>
-                </div>
-              </div>
-              <div className="px-4 py-2 flex items-center gap-2">
-                <div className="flex-1 text-neutral-500 flex items-center">
-                  <div className="team-name text-sm bg-accent rounded-md px-2 py-1 font-semibold ">
-                    You
-                  </div>
-                  <div className="time items-center flex gap-1 text-sm px-2">
-                    <ArrowRight size={14} />{" "}
-                    <span className="uppercase text-md font-semibold">
-                      Over
-                    </span>
-                  </div>
-                </div>
-                <Button
-                  variant="default"
-                  className="bg-blue-500 hover:bg-blue-700"
-                >
+                <Button className="w-full bg-primary hover:bg-blue-primay text-primary-foreground">
                   Join Challenge
                 </Button>
               </div>
-            </div>
-          ))}
-      </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

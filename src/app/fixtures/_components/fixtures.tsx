@@ -1,63 +1,81 @@
 "use client";
 
-import { API_URL } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, Clock } from "lucide-react";
-
-interface Fixture {
-  metadata: {
-    competition: string;
-    date: string;
-  };
-  title: string;
-  markets: Record<string, string>[];
-}
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Fixtures() {
-  const { data, isLoading, error } = useQuery<Fixture[]>({
-    queryKey: ["fixtures"],
-    queryFn: () => fetch(API_URL + "/fixtures").then((res) => res.json()),
-  });
-
-  if (error) {
-    return <div>Error: Could not fetch fixtures</div>;
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const matches = [
+    {
+      homeTeam: "Arsenal",
+      awayTeam: "Man City",
+      date: "05/02/2025",
+      time: "3:00 p.m.",
+      pot: "15K+",
+      league: "EPL",
+    },
+    {
+      homeTeam: "Aston Villa",
+      awayTeam: "Celtic",
+      date: "05/02/2025",
+      time: "3:00 p.m.",
+      pot: "35K+",
+      league: "UCL",
+    },
+    {
+      homeTeam: "Bayer Leverkusen",
+      awayTeam: "Sparta P",
+      date: "05/02/2025",
+      time: "3:00 p.m.",
+      pot: "25K+",
+      league: "UCL",
+    },
+    {
+      homeTeam: "Bayern",
+      awayTeam: "Slovan Bratislava",
+      date: "05/02/2025",
+      time: "3:00 p.m.",
+      pot: "25K+",
+      league: "UCL",
+    },
+    {
+      homeTeam: "Brest",
+      awayTeam: "Real Madrid",
+      date: "05/02/2025",
+      time: "3:00 p.m.",
+      pot: "25K+",
+      league: "UCL",
+    },
+  ];
 
   return (
-    <div>
-      {data &&
-        data.map((fixture, index) => (
-          <div
-            key={index}
-            className={cn("flex gap-1 flex-col py-3", {
-              "border-b": index !== 5,
-            })}
-          >
-            <div className="flex items-center gap-1 px-4 text-neutral-500 font-medium">
-              <div className="team-name text-sm">
-                {fixture.metadata.competition}
-              </div>
-              <div className="time items-center flex gap-1 text-sm">
-                <Clock size={12} />
-                {new Date(fixture.metadata.date).toLocaleTimeString()}
+    <div className="w-full max-w-md p-4">
+      {matches.map((match, index) => (
+        <Card key={index} className="mb-3 hover:shadow-lg transition-shadow">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+                <div>
+                  <div className="text-xs font-bold  flex gap-1 ">
+                    <span className=" text-muted">{match.league}</span>
+                    {match.date} {match.time}
+                  </div>
+                  {/* soccer  icon*/}
+                  <div className=" flex gap-2 font-semibold text-md items-center">
+                    ⚽ {match.homeTeam} vs {match.awayTeam}
+                  </div>
+                </div>
+                <div className="">
+                  <div className="text-sm text-muted font-semibold">
+                    Current Pot Price: {match.pot}
+                  </div>
+                </div>
+                <div className="flex text-muted font-semibold">
+                  <p>Market: 3</p>
+                </div>
               </div>
             </div>
-            <div className="team-name text-base font-medium px-4">
-              {fixture.title}
-            </div>
-            <div className="flex gap-2 text-sm px-4">
-              <div className="flex items-center gap-1">
-                <ChevronRight size={14} /> {fixture.markets.length} markets
-              </div>
-              <div className="flex gap-1">KES. 25000</div>
-            </div>
-          </div>
-        ))}
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }
