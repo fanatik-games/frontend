@@ -14,8 +14,25 @@ import { Plus } from "lucide-react";
 import Image from "next/image";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { API_URL } from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
 
+interface Challenge {
+  title: string;
+  fixtures: {
+    metadata: {
+      tournament: string;
+      date: string;
+    };
+    title: string;
+  };
+}
 export default function OngoingChallenges() {
+  const { data } = useQuery({
+    queryKey: ["challenges"],
+    queryFn: () =>
+      fetch(API_URL + `/fixtures/challenges`).then((res) => res.json()),
+  });
   const [active, setActive] = React.useState(false);
 
   return (

@@ -1,7 +1,31 @@
 "use client";
 import Image from "next/image";
+import { API_URL } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 
+interface Fixture {
+  metadata: {
+    competition: string;
+    date: string;
+  };
+  title: string;
+  markets: Record<string, string>[];
+}
 export default function Fixtures() {
+  const { data, isLoading, error } = useQuery<Fixture[]>({
+    queryKey: ["fixtures"],
+    queryFn: () => fetch(API_URL + "/fixtures").then((res) => res.json()),
+  });
+
+  if (error) {
+    return <div>Error: Could not fetch fixtures</div>;
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   const matches = [
     {
       homeTeam: "Arsenal",
