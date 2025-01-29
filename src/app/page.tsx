@@ -13,19 +13,19 @@ export default function Home() {
           <h4 className="py-2 font-semibold text-2xl ">
             Today &apos;s Fixtures
           </h4>
-          <div className="fixtures-container border rounded-md w-fit">
+          <div className="fixtures-container border rounded-md ">
             <ScrollArea className="h-[80vh]">
               <ScrollBar />
               <Fixtures />
             </ScrollArea>
           </div>
         </div>
-        <div className="flex-1 right px-2 md:px-0 w-[90%]">
+        <div className="flex-1 px-2 md:px-0 w-full">
           <div className="">
             <OngoingChallenges />
           </div>
         </div>
-        <div className="w-fit">
+        <div className="">
           <OngoingDuels />
         </div>
       </main>

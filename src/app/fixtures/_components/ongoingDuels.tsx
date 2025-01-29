@@ -62,7 +62,7 @@ export default function OngoingDuels() {
           These are the duels that are either ongoing or yet to start
         </p>
       </div>
-      <ScrollArea className="h-[55vh]">
+      <ScrollArea className="h-[50vh]">
         <ScrollBar />
         {matches.map((match, index) => (
           <Card key={index} className="my-4 border-0 rounded">

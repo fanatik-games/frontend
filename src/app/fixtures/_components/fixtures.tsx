@@ -1,6 +1,4 @@
 "use client";
-
-import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 
 export default function Fixtures() {
@@ -48,13 +46,13 @@ export default function Fixtures() {
   ];
 
   return (
-    <div className="w-full max-w-md p-4">
+    <div className="w-full max-w-md">
       {matches.map((match, index) => (
-        <Card
+        <div
           key={index}
-          className=" flex mb-3 hover:shadow-lg transition-shadow"
+          className={` flex mb-3 hover:shadow-lg transition-shadow ${index !== matches.length - 1 ? "border-b-[1px]" : ""} px-0`}
         >
-          <CardContent className="p-4">
+          <div className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-1">
                 <div className=" space-y-2">
@@ -68,11 +66,11 @@ export default function Fixtures() {
                   </div>
                 </div>
                 <div className="">
-                  <div className="text-sm text-muted font-semibold flex  gap-2">
+                  <div className="text-sm text-muted font-semibold flex items-center  gap-2">
                     Current Pot Price:{" "}
                     <Image
-                      width="10"
-                      height="10"
+                      width="25"
+                      height="25"
                       src="https://img.icons8.com/arcade/64/coins--v1.png"
                       alt="coins--v1"
                     />{" "}
@@ -84,8 +82,8 @@ export default function Fixtures() {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       ))}
     </div>
   );
