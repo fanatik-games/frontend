@@ -1,5 +1,9 @@
 import AccountPage from "@/components/accountpage";
 
 export default function MobileProfile() {
-  return <AccountPage />;
+  return (
+    <div className="p-2">
+      <AccountPage />
+    </div>
+  );
 }

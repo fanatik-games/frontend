@@ -82,13 +82,11 @@ export function UserNav({ user }: { user?: User }) {
                 </span>
               </div>
             </DialogTrigger>
-            <DialogContent className="max-w-sm p-2">
+            <DialogContent className="max-w-sm p-2 h-fit">
               <DialogHeader>
                 <DialogTitle>Account</DialogTitle>
               </DialogHeader>
-              <ScrollArea className="max-h-screen h-fit">
-                <AccountPage />
-              </ScrollArea>
+              <AccountPage />
             </DialogContent>
           </Dialog>
           <DropdownMenuItem>
