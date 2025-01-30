@@ -103,7 +103,7 @@ export default function OngoingDuels() {
         ))}
       </ScrollArea>
 
-      <div className="border-y-[1px] border-border sticky mb-6 bg-white p-4">
+      <div className="border-t-[1px] border-border sticky mb-6 bg-white p-4">
         <div className="text-lg  mb-3">Total Stake</div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
