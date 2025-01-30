@@ -1,6 +1,7 @@
 import OngoingChallenges from "@/app/fixtures/_components/challenges";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default function MobileChallengesList() {
   return (
@@ -14,7 +15,9 @@ export default function MobileChallengesList() {
         </div>
         <p className=" text-lg">Back To Fixtures</p>
       </Link>
-      <OngoingChallenges />
+      <Suspense fallback={<div>Loading...</div>}>
+        <OngoingChallenges />
+      </Suspense>
     </div>
   );
 }

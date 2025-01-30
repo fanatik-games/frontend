@@ -3,6 +3,7 @@ import Header from "@/components/header";
 import Fixtures from "./fixtures/_components/fixtures";
 import OngoingChallenges from "./fixtures/_components/challenges";
 import OngoingDuels from "./fixtures/_components/ongoingDuels";
+import { Suspense } from "react";
 export default function Home() {
   return (
     <div>
@@ -22,7 +23,9 @@ export default function Home() {
         </div>
         <div className="flex-1 w-full">
           <div className="">
-            <OngoingChallenges />
+            <Suspense fallback={<div>Loading...</div>}>
+              <OngoingChallenges />
+            </Suspense>
           </div>
         </div>
         <div className="">
