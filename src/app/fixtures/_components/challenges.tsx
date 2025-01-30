@@ -88,7 +88,7 @@ export default function OngoingChallenges() {
 
                 {/* Match Details */}
                 <div className="s">
-                  <div className="grid grid-cols-2 gap-1">
+                  <div className="md:grid md:grid-cols-2 gap-2 flex flex-col">
                     {data &&
                       data.challenges.length > 0 &&
                       data.challenges.map((challenge: Challenge) => (
