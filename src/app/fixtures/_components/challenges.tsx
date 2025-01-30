@@ -48,7 +48,7 @@ export default function OngoingChallenges() {
     <div className="flex flex-col">
       {/* Header */}
       <Tabs defaultValue="h2h-challenges">
-        <TabsList className="w-80 flex justify-between bg-accent border border-muted/20">
+        <TabsList className="w-full md:w-80  flex justify-between bg-accent border border-muted/20">
           <TabsTrigger value="h2h-challenges" className="flex-1">
             H2H Duels
           </TabsTrigger>
