@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import BallIcon from "@/components/icons/ball-icon";
 
 export default function OngoingDuels() {
   const matches = [
@@ -55,37 +55,40 @@ export default function OngoingDuels() {
   ];
 
   return (
-    <div className=" mx-auto">
-      <div className="">
-        <h1 className="text-xl font-bold text-primary mb-1">Ongoing Duels</h1>
-        <p className="text-sm text-muted font-semibold">
+    <div className=" h-full overflow-y-auto">
+      <div className="p-4">
+        <h1 className="text-xl  text-primary mb-1">Ongoing Duels</h1>
+        <p className="text-sm text-muted">
           These are the duels that are either ongoing or yet to start
         </p>
       </div>
-      <ScrollArea className="h-[50vh]">
+      <ScrollArea className="md:h-[50vh] h-[80vh]">
         <ScrollBar />
         {matches.map((match, index) => (
-          <Card key={index} className="my-4 border-0 rounded">
-            <CardContent className="p-4">
-              <div className="text-xs font-semibold text-muted mb-2 flex gap-1 shadow-none">
-                {match.league}
-                <p className="font-semibold text-black ">{match.date}</p>
-              </div>
-              <div className="flex items-center gap-2 mb-4 font-bold">
-                ⚽ {match.teams}
+          <div key={index} className="my-4 space-y-2  ">
+            <div className=" flex flex-col space-y-2 mt-2">
+              <div className=" grid space-y-1">
+                <div className="text-md  text-muted  flex gap-1 shadow-none px-4">
+                  {match.league}
+                  <p className=" text-black ">{match.date}</p>
+                </div>
+                <div className="px-4 flex text-lg items-center gap-2 mb-4">
+                  <BallIcon />
+                  {match.teams}
+                </div>
               </div>
 
               {match.predictions.map((pred, predIndex) => (
                 <div
                   key={predIndex}
-                  className="bg-accent p-3 rounded-lg mb-2 last:mb-0"
+                  className="bg-accent py-2 mb-2 last:mb-0 px-12 "
                 >
-                  <div className="font-medium mb-2">{pred.type}</div>
-                  <div className="text-sm text-muted flex gap-2">
+                  <div className="font-medium">{pred.type}</div>
+                  <div className="text-sm text-muted flex gap-2 items-center">
                     Stake Amount:{" "}
                     <Image
-                      width="10"
-                      height="10"
+                      width="25"
+                      height="25"
                       src="https://img.icons8.com/arcade/64/coins--v1.png"
                       alt="coins--v1"
                     />{" "}
@@ -96,34 +99,32 @@ export default function OngoingDuels() {
                   </div>
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </ScrollArea>
 
-      <div className=" mb-4 py-4 border-y-[1px] border-border">
-        <div className="text-lg font-bold mb-3">Total Stake</div>
+      <div className="border-y-[1px] border-border sticky mb-8 bg-white p-4">
+        <div className="text-lg  mb-3">Total Stake</div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Image
-              width="10"
-              height="10"
+              width="25"
+              height="25"
               src="https://img.icons8.com/arcade/64/coins--v1.png"
               alt="coins--v1"
             />{" "}
             <span>7500.00 F.C</span>
           </div>
           <div className="flex items-center gap-4 text-green-600">
-            <span className="text-[#19B270] font-semibold text-sm">
-              Est. Winnings
-            </span>
+            <span className="text-[#19B270] text-sm">Est. Winnings</span>
             <Image
-              width="10"
-              height="10"
+              width="25"
+              height="25"
               src="https://img.icons8.com/arcade/64/coins--v1.png"
               alt="coins--v1"
             />{" "}
-            <span className=" text-primary font-semibold">7500.00 F.C</span>
+            <span className=" text-primary ">7500.00 F.C</span>
           </div>
         </div>
       </div>
