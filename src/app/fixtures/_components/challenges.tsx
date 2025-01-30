@@ -21,6 +21,7 @@ import BallIcon from "@/components/icons/ball-icon";
 import { format } from "date-fns";
 
 interface Challenge {
+  id: string;
   title: string;
   fixtures: {
     metadata: {
@@ -43,8 +44,6 @@ export default function OngoingChallenges() {
     enabled: !!fixtureId,
   });
 
-  const [active] = React.useState(false);
-
   return (
     <div className="flex flex-col">
       {/* Header */}
@@ -59,85 +58,76 @@ export default function OngoingChallenges() {
         </TabsList>
         <TabsContent value="h2h-challenges" className="max-w-5xl">
           {data && data.challenges ? (
-            <Card>
-              <CardHeader className="px-6 pt-4 pb-2 space-y-0">
-                <div className="flex items-center gap-1">
-                  <span className="uppercase text-muted">
-                    {data.fixture.metadata.competition}
-                  </span>
-                  <span>
-                    {format(data.fixture.metadata.date, "dd/mm/yyy HH:mm")}
-                  </span>
-                </div>
-                <CardTitle className="flex gap-1 font-normal text-lg items-center">
-                  <BallIcon />
-                  <span>{data.fixture.title}</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
+            <div className="p-4 border rounded-xl">
+              <div className="flex items-center gap-1">
+                <span className="uppercase text-muted">
+                  {data.fixture.metadata.competition}
+                </span>
+                <span>
+                  {format(data.fixture.metadata.date, "dd/mm/yyy HH:mm")}
+                </span>
+              </div>
+              <div className="flex gap-1 font-normal text-lg items-center mb-1">
+                <BallIcon />
+                <span>{data.fixture.title}</span>
+              </div>
+
+              <div className="">
                 {/*  */}
                 {/* Search and Create */}
-                <div className="flex gap-4 mb-6 w-full justify-between">
+                <div className="flex gap-4 mb-3 w-full justify-between">
                   <Input
                     placeholder="Search Duel ..."
-                    className="bg-accent w-[40%] focus-visible:ring-0 border-border border-[1px] rounded-lg"
+                    className="bg-accent h-8 w-[40%] focus-visible:ring-0 border-border border-[1px] rounded-lg"
                   />
-                  <Button className=" hover:bg-blue-800">
+                  <Button size={"sm"} className=" hover:bg-blue-800">
                     <Plus className="w-4 h-4" />
                     Create Duel
                   </Button>
                 </div>
 
                 {/* Match Details */}
-                <Card className="mb-6">
-                  <CardContent className="p-4">
-                    {data && data.challenges.length > 0 && (
-                      <div key={0} className="mb-4">
-                        <div className="flex flex-col gap-2 mb-4">
-                          <span className="text-black text-sm flex gap-1">
-                            <span className=" text-muted">
-                              {data.fixture.metadata.competition}
-                            </span>
-                            {format(
-                              data.fixture.metadata.date,
-                              "dd/mm/yyy HH:mm",
-                            )}
-                          </span>
-                          <div className="flex items-center">
-                            <span className="flex gap-1 items-center  ">
-                              <BallIcon /> {data.fixture.title}
-                            </span>
-                          </div>
-                        </div>
-
-                        <ScrollArea className="h-[45vh]">
-                          <ScrollBar />
-                          <div className="grid grid-cols-2 gap-4">
-                            <h3 className="font-semibold mb-3">
-                              {data.challenges[0].title}
+                <div className="s">
+                  <div className="grid grid-cols-2 gap-1">
+                    {data &&
+                      data.challenges.length > 0 &&
+                      data.challenges.map((challenge: Challenge) => (
+                        <div
+                          key={challenge.id}
+                          className="bg-accent rounded-md p-2"
+                        >
+                          <div className="">
+                            <h3 className="text-md capitalize">
+                              {challenge.title}
                             </h3>
-                            <div className="text-sm text-muted mb-1 flex gap-2 items-center">
+                            <div className="text-sm text-muted flex gap-2 items-center">
                               Stake Amount:{" "}
                               <Image
-                                width="25"
-                                height="25"
+                                width="20"
+                                height="20"
                                 src="https://img.icons8.com/arcade/64/coins--v1.png"
                                 alt="coins--v1"
                               />{" "}
                             </div>
-                            <div className="text-sm text-muted mb-1"></div>
-                            <div className="text-sm text-muted mb-3"></div>
-                            <Button className="w-full bg-primary hover:bg-blue-primay text-primary-foreground">
+                            <div className="text-sm text-muted">
+                              Created By:{" "}
+                            </div>
+                            <div className="text-sm text-muted">
+                              Prediction:{" "}
+                            </div>
+                            <Button
+                              size={"sm"}
+                              className="mt-2 hover:bg-blue-primay text-primary-foreground"
+                            >
                               Join Challenge
                             </Button>
                           </div>
-                        </ScrollArea>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </CardContent>
-            </Card>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           ) : null}
         </TabsContent>
         <TabsContent value="group-challenges">
