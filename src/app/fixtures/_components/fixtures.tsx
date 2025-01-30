@@ -7,7 +7,8 @@ import { ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import BallIcon from "@/components/icons/ball-icon";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { isMobile } from "@/lib/utils";
 
 interface Fixture {
   id: string;
@@ -20,6 +21,7 @@ interface Fixture {
 }
 
 export default function Fixtures() {
+  const [userAgent, setUserAgent] = useState("");
   const { data, isLoading, error } = useQuery<Fixture[]>({
     queryKey: ["fixtures"],
     queryFn: () => fetch(API_URL + "/fixtures").then((res) => res.json()),
@@ -27,6 +29,10 @@ export default function Fixtures() {
 
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (window.navigator) setUserAgent(window.navigator.userAgent);
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -53,11 +59,17 @@ export default function Fixtures() {
           <div
             key={index}
             onClick={() =>
-              router.push(
-                pathname +
-                  "?" +
-                  new URLSearchParams({ fixture: match.id }).toString(),
-              )
+              isMobile(userAgent)
+                ? router.push(
+                    "/m/challenges" +
+                      "?" +
+                      new URLSearchParams({ fixture: match.id }).toString(),
+                  )
+                : router.push(
+                    pathname +
+                      "?" +
+                      new URLSearchParams({ fixture: match.id }).toString(),
+                  )
             }
             className={`flex mb-3 ${index !== data.length - 1 ? "border-b-[1px]" : ""} px-0`}
           >
