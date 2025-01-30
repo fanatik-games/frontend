@@ -8,8 +8,8 @@ export default function Home() {
     <div>
       {/* header hapa */}
       <Header />
-      <main className="flex flex-col h-fit md:flex-row  mx-auto w-full  gap-6 px-4 py-3">
-        <div className="md:px-0">
+      <main className="flex container flex-col h-fit md:flex-row mx-auto w-full gap-6 py-3">
+        <div className="md:px-0 min-w-[320px]">
           <h4 className="py-2 font-semibold text-2xl ">
             Today &apos;s Fixtures
           </h4>
@@ -20,7 +20,7 @@ export default function Home() {
             </ScrollArea>
           </div>
         </div>
-        <div className="flex-1 px-2 md:px-0 w-full">
+        <div className="flex-1 w-full">
           <div className="">
             <OngoingChallenges />
           </div>
