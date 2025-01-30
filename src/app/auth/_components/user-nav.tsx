@@ -1,4 +1,12 @@
+import AccountPage from "@/components/accountpage";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { Loader2 } from "lucide-react";
@@ -54,7 +63,7 @@ export function UserNav({ user }: { user?: User }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Link href="/account">
+          {/* <Link href="/account">
             <DropdownMenuItem className="flex flex-col justify-start items-start">
               <span className="text-base text-neutral-600">Account</span>
               <span className="text-xs text-neutral-500 font-medium">
@@ -62,7 +71,26 @@ export function UserNav({ user }: { user?: User }) {
                 information.
               </span>
             </DropdownMenuItem>
-          </Link>
+          </Link> */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="flex flex-col p-2 cursor-pointer hover:bg-accent rounded-md">
+                <span className="text-base text-neutral-600">Account</span>
+                <span className="text-xs text-neutral-500 font-medium">
+                  This is where you will be able to access your account
+                  information.
+                </span>
+              </div>
+            </DialogTrigger>
+            <DialogContent className="max-w-sm p-2">
+              <DialogHeader>
+                <DialogTitle>Account</DialogTitle>
+              </DialogHeader>
+              <ScrollArea className="max-h-screen h-fit">
+                <AccountPage />
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
           <DropdownMenuItem>
             <Link href="/settings" className="text-base text-neutral-600">
               Settings

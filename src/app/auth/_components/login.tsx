@@ -15,7 +15,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
-import { OTP_TOKEN_SIZE } from "@/lib/constants";
+import { APP_URL, OTP_TOKEN_SIZE } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
 import { Provider } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
@@ -78,7 +78,7 @@ export function LoginForm() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: "https://app.fanatix.games",
+        redirectTo: APP_URL,
       },
     });
     if (error) {
