@@ -3,16 +3,18 @@ import { isMobile } from "./lib/utils";
 
 export default function middleware(request: NextRequest) {
   const userAgent = request.headers.get("user-agent") || "";
-  const isMPath = request.nextUrl.pathname.startsWith("/m");
-  if (isMobile(userAgent) && !isMPath) {
-    const url = request.nextUrl.clone();
-    // Prepend /m to current path
-    if (url.pathname === "/") {
-      url.pathname = "/m/fixtures";
+  if (!request.nextUrl.pathname.includes("auth")) {
+    const isMPath = request.nextUrl.pathname.startsWith("/m");
+    if (isMobile(userAgent) && !isMPath) {
+      const url = request.nextUrl.clone();
+      // Prepend /m to current path
+      if (url.pathname === "/") {
+        url.pathname = "/m/fixtures";
+        return NextResponse.redirect(url);
+      }
+      url.pathname = `/m${url.pathname}`;
       return NextResponse.redirect(url);
     }
-    url.pathname = `/m${url.pathname}`;
-    return NextResponse.redirect(url);
   }
 }
 
