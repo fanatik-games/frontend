@@ -62,8 +62,7 @@ export default function OngoingDuels() {
           These are the duels that are either ongoing or yet to start
         </p>
       </div>
-      <ScrollArea className="md:h-[50vh] h-[80vh]">
-        <ScrollBar />
+      <ScrollArea className="h-[50vh]">
         {matches.map((match, index) => (
           <div key={index} className="my-4 space-y-2  ">
             <div className=" flex flex-col space-y-2 mt-2">
@@ -104,7 +103,7 @@ export default function OngoingDuels() {
         ))}
       </ScrollArea>
 
-      <div className="border-y-[1px] border-border sticky mb-8 bg-white p-4">
+      <div className="border-t-[1px] border-border sticky mb-6 bg-white p-4">
         <div className="text-lg  mb-3">Total Stake</div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">

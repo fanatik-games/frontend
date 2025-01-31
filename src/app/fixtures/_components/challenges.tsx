@@ -87,45 +87,49 @@ export default function OngoingChallenges() {
                 </div>
 
                 {/* Match Details */}
-                <div className="s">
-                  <div className="grid grid-cols-2 gap-1">
-                    {data &&
-                      data.challenges.length > 0 &&
-                      data.challenges.map((challenge: Challenge) => (
-                        <div
-                          key={challenge.id}
-                          className="bg-accent rounded-md p-2"
-                        >
-                          <div className="">
-                            <h3 className="text-md capitalize">
-                              {challenge.title}
-                            </h3>
-                            <div className="text-sm text-muted flex gap-2 items-center">
-                              Stake Amount:{" "}
-                              <Image
-                                width="20"
-                                height="20"
-                                src="https://img.icons8.com/arcade/64/coins--v1.png"
-                                alt="coins--v1"
-                              />{" "}
-                            </div>
-                            <div className="text-sm text-muted">
-                              Created By:{" "}
-                            </div>
-                            <div className="text-sm text-muted">
-                              Prediction:{" "}
-                            </div>
-                            <Button
-                              size={"sm"}
-                              className="mt-2 hover:bg-blue-primay text-primary-foreground"
+                <ScrollArea className="">
+                  <ScrollBar>
+                    <div className="s">
+                      <div className="md:grid md:grid-cols-2 gap-2 flex flex-col">
+                        {data &&
+                          data.challenges.length > 0 &&
+                          data.challenges.map((challenge: Challenge) => (
+                            <div
+                              key={challenge.id}
+                              className="bg-accent rounded-md p-2"
                             >
-                              Join Challenge
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </div>
+                              <div className="">
+                                <h3 className="text-md capitalize">
+                                  {challenge.title}
+                                </h3>
+                                <div className="text-sm text-muted flex gap-2 items-center">
+                                  Stake Amount:{" "}
+                                  <Image
+                                    width="20"
+                                    height="20"
+                                    src="https://img.icons8.com/arcade/64/coins--v1.png"
+                                    alt="coins--v1"
+                                  />{" "}
+                                </div>
+                                <div className="text-sm text-muted">
+                                  Created By:{" "}
+                                </div>
+                                <div className="text-sm text-muted">
+                                  Prediction:{" "}
+                                </div>
+                                <Button
+                                  size={"sm"}
+                                  className="mt-2 hover:bg-blue-primay text-primary-foreground"
+                                >
+                                  Join Challenge
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </ScrollBar>
+                </ScrollArea>
               </div>
             </div>
           ) : null}
