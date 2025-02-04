@@ -93,8 +93,15 @@ export function LoginForm() {
     if (!error) {
       const token = data.session?.access_token;
       if (!token) return;
-      setAuthToken(token);
-      setUsernamePromptIsShown(true);
+      const userCreatedAt = new Date(data.user?.created_at ?? "");
+      const tenSecondsAgo = new Date(Date.now() - 10000);
+
+      if (userCreatedAt > tenSecondsAgo) {
+        setUsernamePromptIsShown(true);
+        setAuthToken(token);
+      } else {
+        router.push("/");
+      }
     }
 
     if (error) {
