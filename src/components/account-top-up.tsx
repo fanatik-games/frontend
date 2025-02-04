@@ -129,7 +129,7 @@ export default function AccountTopUp({ user }: { user?: User }) {
             alt="coins--v1"
           />
           <span className="font-semibold text-xs font-mono">
-            {userData?.balance}FC
+            {userData?.balance}.00 FC
           </span>
           <div className="w-6 h-6 flex justify-center items-center bg-blue-500 text-white rounded-md">
             <Plus />
