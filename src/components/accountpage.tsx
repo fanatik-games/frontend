@@ -89,7 +89,8 @@ const AccountPage = () => {
                     {userData?.username
                       .split(" ")
                       .map((word) => word[0])
-                      .join("")}
+                      .join("")
+                      .toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </div>
