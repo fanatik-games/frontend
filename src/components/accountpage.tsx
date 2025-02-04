@@ -65,7 +65,6 @@ const AccountPage = () => {
 
     fetchUserData();
   }, []);
-  console.log(userData, "userdata");
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
