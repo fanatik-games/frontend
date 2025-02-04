@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { verifyUserAccount } from "@/lib/helpers";
 
 export default function AuthCallback() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const next = searchParams.get("next") ?? "/";
 
   useEffect(() => {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
@@ -29,7 +27,7 @@ export default function AuthCallback() {
                   })
                   .then(({ error }) => {
                     if (!error) {
-                      router.push(next);
+                      router.push("/");
                     }
                   });
               }
@@ -38,7 +36,11 @@ export default function AuthCallback() {
         }
       });
     }
-  }, [router, next]);
+  }, [router]);
 
-  return <div>Alright, kiasi tu I panga you...</div>;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <div>Alright, kiasi tu...</div>
+    </Suspense>
+  );
 }
