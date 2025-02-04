@@ -19,7 +19,6 @@ export default function AuthCallback() {
       // check if the user account was created a few seconds ago
       supabase.auth.getUser(accessToken).then(({ data }) => {
         if (data && data.user) {
-          console.log("user metadata", data.user.user_metadata);
           verifyUserAccount(accessToken, data.user.user_metadata.name).then(
             (res) => {
               if (res) {
