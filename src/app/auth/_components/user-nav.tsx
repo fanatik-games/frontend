@@ -17,12 +17,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { API_URL } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { Loader2 } from "lucide-react";
 
 import Image from "next/image";
 import Link from "next/link";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
 export function UserNav({ user }: { user?: User }) {
@@ -36,6 +38,46 @@ export function UserNav({ user }: { user?: User }) {
 
     return "Anonymous: " + user.id.split("-")[0];
   };
+
+  interface UserData {
+    balance: number;
+    email: string;
+    id: string;
+    losses: number;
+    participatedChallenges: number;
+    phone: string;
+    playthrough: {
+      current: number;
+      target: number;
+    };
+    referralCode: string;
+    referralCount: number;
+    username: string;
+    wins: number;
+  }
+
+  const [userData, setUserData] = React.useState<UserData | null>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      try {
+        const response = await fetch(API_URL + "/user/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const responseData = await response.json();
+        setUserData(responseData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <DropdownMenu>
@@ -54,10 +96,10 @@ export function UserNav({ user }: { user?: User }) {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none font-mono">
-              <span className="text-xs">{getUserName(user!)}</span>
+              <span className="text-xs">{userData?.username}</span>
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user?.email ? user.email : user?.phone}
+              {userData?.phone}
             </p>
           </div>
         </DropdownMenuLabel>
