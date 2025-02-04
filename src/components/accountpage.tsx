@@ -40,6 +40,7 @@ const AccountPage = () => {
       } = await supabase.auth.getSession();
       if (session) {
         setUserId(session.user.id);
+        console.log(session.user, "session user");
         const getUser = async () => {
           try {
             const { data, error } = await supabase
@@ -51,7 +52,7 @@ const AccountPage = () => {
             if (error) throw error;
 
             if (data) {
-              console.log(data, "user data");
+              // console.log(data, "user data");
               setUser({
                 name: data.name,
                 phone: data.phone,
@@ -81,7 +82,7 @@ const AccountPage = () => {
           <div className="flex items-center space-x-4 justify-between">
             <div>
               <h2 className="text-lg font-bold">Anto Ducci</h2>
-              <p className="text-sm text-gray-600">0710 234 859</p>
+              <p className="text-sm text-gray-600">{user.phone}</p>
             </div>
             <div>
               <Avatar className="w-8 h-8">
