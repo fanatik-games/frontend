@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,12 +15,62 @@ import { Trophy, XCircle, Wallet, Copy } from "lucide-react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import PayoutModal from "./payout";
+import { supabase } from "@/lib/supabase";
 const AccountPage = () => {
   const leaderboardData = [
     { rank: "#1", name: "Benji", amount: "Ksh 1000" },
     { rank: "#2", name: "Ayee Yooh", amount: "Ksh 950" },
     { rank: "#3", name: "You", amount: "Ksh 145" },
   ];
+  const [user, setUser] = useState({
+    name: "",
+    phone: "",
+    walletBalance: "",
+    challengesParticipated: 0,
+    wins: 0,
+    losses: 0,
+  });
+  const [user_id, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+      if (session) {
+        setUserId(session.user.id);
+        const getUser = async () => {
+          try {
+            const { data, error } = await supabase
+              .from("users")
+              .select("*")
+              .eq("id", session.user.id)
+              .single();
+
+            if (error) throw error;
+
+            if (data) {
+              console.log(data, "user data");
+              setUser({
+                name: data.name,
+                phone: data.phone,
+                walletBalance: data.fc_balance,
+                challengesParticipated: data.challenges_participated,
+                wins: data.wins,
+                losses: data.losses,
+              });
+            }
+          } catch (error) {
+            console.error("Error fetching user:", error);
+          }
+        };
+
+        getUser();
+      }
+    };
+    fetchSession();
+  }, []);
   return (
     // p-4 min-h-screen
     <div className="">
@@ -49,7 +100,7 @@ const AccountPage = () => {
                     <Wallet className="w-5 h-5 mr-2 text-blue-500" />
                     <span className="text-xl">Balance:</span>
                   </span>
-                  <span className=" text-xl">145.00 FC</span>
+                  <span className=" text-xl">{user.walletBalance} FC</span>
                 </div>
                 <div className="limit text-xs">
                   <span>Min. Withdraw Amount 500 FC</span>
