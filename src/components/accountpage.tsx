@@ -99,7 +99,7 @@ const AccountPage = () => {
                       <Wallet className="w-5 h-5 mr-2 text-blue-500" />
                       <span className="text-xl">Balance:</span>
                     </span>
-                    <span className=" text-xl">{userData?.balance} FC</span>
+                    <span className=" text-xl">{userData?.balance}.00 FC</span>
                   </div>
                   <div className="limit text-xs">
                     <span>Min. Withdraw Amount 500 FC</span>
