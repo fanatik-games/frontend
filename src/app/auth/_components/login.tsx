@@ -16,12 +16,13 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
-import { API_URL, APP_URL, OTP_TOKEN_SIZE } from "@/lib/constants";
+import { APP_URL, OTP_TOKEN_SIZE } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
 import { Provider } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import UsernamePrompt from "./username-dialog";
 
 export function LoginForm() {
   const [phone, setPhone] = useState("");
@@ -29,10 +30,7 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [showOtpInput, setShowOtpInput] = useState(false);
-  const [username, setUsername] = useState("");
   const [usernamePromptIsShown, setUsernamePromptIsShown] = useState(false);
-  const [savingUsername, setSavingUsername] = useState(false);
-  const [authToken, setAuthToken] = useState<string | null>(null);
   const router = useRouter();
 
   const formatPhoneNumber = (phone: string) => {
@@ -58,27 +56,6 @@ export function LoginForm() {
     setLoading(false);
   };
 
-  const verifyUserAccount = async () => {
-    const response = await fetch(API_URL + "/user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + authToken,
-      },
-      body: JSON.stringify({
-        username,
-      }),
-    });
-    if (response.ok) {
-      setUsernamePromptIsShown(false);
-      setSavingUsername(false);
-      setUsername("");
-      router.push("/");
-    } else {
-      setSavingUsername(false);
-    }
-  };
-
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -98,7 +75,6 @@ export function LoginForm() {
 
       if (userCreatedAt > tenSecondsAgo) {
         setUsernamePromptIsShown(true);
-        setAuthToken(token);
       } else {
         router.push("/");
       }
@@ -114,7 +90,7 @@ export function LoginForm() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: APP_URL,
+        redirectTo: APP_URL + "/auth/callback?next=/",
       },
     });
     if (error) {
@@ -298,32 +274,10 @@ export function LoginForm() {
         </Card>
       </div>
       {usernamePromptIsShown ? (
-        <Dialog open={usernamePromptIsShown}>
-          <DialogContent className="rounded-lg p-2 border border-accent max-w-sm h-fit">
-            <DialogTitle>Enter your username</DialogTitle>
-            <div className="space-y-2">
-              <Label>Choose a name</Label>
-              <Input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Ex: mzeemzima"
-                className="w-full"
-              />
-              <Button
-                size={"sm"}
-                onClick={() => {
-                  if (!username) return;
-                  setSavingUsername(true);
-                  verifyUserAccount();
-                }}
-                disabled={savingUsername}
-                className="h-8 w-full my-2"
-              >
-                {savingUsername ? "Saving..." : "Save"}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <UsernamePrompt
+          open={usernamePromptIsShown}
+          setOpen={setUsernamePromptIsShown}
+        />
       ) : null}
     </>
   );
