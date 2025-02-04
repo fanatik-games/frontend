@@ -292,7 +292,7 @@ export function LoginForm() {
       </div>
       {usernamePromptIsShown ? (
         <Dialog open={usernamePromptIsShown}>
-          <DialogContent className="rounded-lg p-1 border border-accent">
+          <DialogContent className="rounded-lg p-2 border border-accent max-w-sm h-fit">
             <DialogTitle>Enter your username</DialogTitle>
             <div className="space-y-2">
               <Label>Choose a name</Label>
@@ -310,7 +310,7 @@ export function LoginForm() {
                   verifyUserAccount();
                 }}
                 disabled={savingUsername}
-                className="h-8"
+                className="h-8 w-full my-2"
               >
                 {savingUsername ? "Saving..." : "Save"}
               </Button>
