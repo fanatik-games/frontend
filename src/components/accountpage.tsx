@@ -86,7 +86,10 @@ const AccountPage = () => {
                 <Avatar className="w-8 h-8">
                   <AvatarImage src="/path/to/avatar.jpg" alt="User Avatar" />
                   <AvatarFallback className="bg-blue-500 text-white">
-                    AD
+                    {userData?.username
+                      .split(" ")
+                      .map((word) => word[0])
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
               </div>
