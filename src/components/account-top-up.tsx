@@ -18,6 +18,8 @@ import useRealtime from "@/hooks/useRealtime";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/constants";
 import useAuth from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
+import React from "react";
 
 export default function AccountTopUp({ user }: { user?: User }) {
   const [toppingUp, isToppingUp] = useState(false);
@@ -60,6 +62,47 @@ export default function AccountTopUp({ user }: { user?: User }) {
     isToppingUp(false);
   };
 
+  interface UserData {
+    balance: number;
+    email: string;
+    id: string;
+    losses: number;
+    participatedChallenges: number;
+    phone: string;
+    playthrough: {
+      current: number;
+      target: number;
+    };
+    referralCode: string;
+    referralCount: number;
+    username: string;
+    wins: number;
+  }
+
+  const [userData, setUserData] = React.useState<UserData | null>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      try {
+        const response = await fetch(API_URL + "/user/me", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const responseData = await response.json();
+
+        setUserData(responseData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   useEffect(() => {
     if (data) {
       const event = data.event;
@@ -85,7 +128,9 @@ export default function AccountTopUp({ user }: { user?: User }) {
             src="https://img.icons8.com/arcade/64/coins--v1.png"
             alt="coins--v1"
           />
-          <span className="font-semibold text-xs font-mono">145.00 FC</span>
+          <span className="font-semibold text-xs font-mono">
+            {userData?.balance}FC
+          </span>
           <div className="w-6 h-6 flex justify-center items-center bg-blue-500 text-white rounded-md">
             <Plus />
           </div>
