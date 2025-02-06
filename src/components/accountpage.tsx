@@ -153,7 +153,9 @@ const AccountPage = () => {
                         style={{ width: "15%" }}
                       ></div>
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">Ksh145 Earned</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Ksh {userData.playthrough.current} Earned
+                    </p>
                   </div>
                 </div>
               </div>
@@ -167,7 +169,7 @@ const AccountPage = () => {
               </p>
               <div className="flex items-center justify-between border border-gray-300 rounded-md px-3 py-2">
                 <span className="text-xs text-gray-600 truncate">
-                  https://fantitk.com/auth?referral-code=12ICKGLG
+                  https://app.fanatix.games/?ref={userData?.referralCode}
                 </span>
                 <button className="text-blue-600 text-sm font-medium hover:underline">
                   <Copy className="w-5 h-5" />
