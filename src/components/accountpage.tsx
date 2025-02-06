@@ -154,7 +154,7 @@ const AccountPage = () => {
                       ></div>
                     </div>
                     <p className="text-sm text-gray-500 mt-1">
-                      Ksh {userData?.balance} Earned
+                      Ksh {userData.playthrough.current} Earned
                     </p>
                   </div>
                 </div>
