@@ -133,7 +133,7 @@ export default function OngoingChallenges() {
                       <DialogHeader>
                         <DialogTitle>Select Challenge Outcome</DialogTitle>
                       </DialogHeader>
-                      <div className="space-y-4 mt-4">
+                      <div className="space-y-4 mt-2">
                         {/* Challenge Selection Dropdown */}
                         <Select onValueChange={handleChallengeSelect}>
                           <SelectTrigger className="w-full">
@@ -161,11 +161,16 @@ export default function OngoingChallenges() {
                             <h3 className="font-medium">
                               Select Outcome for: {selectedChallenge.title}
                             </h3>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 w-[100%]">
                               {selectedChallenge.outcomes &&
                                 selectedChallenge.outcomes.map(
                                   (outcome: string) => (
                                     <Button
+                                      className={
+                                        selectedOutcome === outcome
+                                          ? "border-primary border-2 text-primary-foreground bg-accent flex-1 text-transform: capitalize"
+                                          : "bg-accent  flex-1 text-primary text-transform: capitalize"
+                                      }
                                       key={outcome}
                                       variant={
                                         selectedOutcome === outcome
@@ -176,7 +181,14 @@ export default function OngoingChallenges() {
                                         handleOutcomeSelect(outcome)
                                       }
                                     >
-                                      {outcome}
+                                      {selectedChallenge.title ===
+                                      "who will win the match"
+                                        ? outcome === "1"
+                                          ? "Home"
+                                          : outcome === "x"
+                                            ? "Draw"
+                                            : "Away"
+                                        : outcome}
                                     </Button>
                                   ),
                                 )}
@@ -185,11 +197,18 @@ export default function OngoingChallenges() {
                         )}
                         {/* Selected Outcome Display */}
                         {selectedOutcome && (
-                          <div className="mt-4">
+                          <div className="mt-4 ">
                             <p>
                               Selected Outcome:{" "}
-                              <span className=" text-primary-foreground">
-                                {selectedOutcome}
+                              <span className=" text-primary">
+                                {selectedChallenge?.title ===
+                                "who will win the match"
+                                  ? selectedOutcome === "1"
+                                    ? "Home"
+                                    : selectedOutcome === "x"
+                                      ? "Draw"
+                                      : "Away"
+                                  : selectedOutcome}
                               </span>
                             </p>
                           </div>
