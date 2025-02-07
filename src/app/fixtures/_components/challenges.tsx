@@ -19,6 +19,23 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import BallIcon from "@/components/icons/ball-icon";
 import { format } from "date-fns";
+import CreateDuel from "@/components/createDuels";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Select, SelectItem } from "@radix-ui/react-select";
 
 interface Challenge {
   id: string;
@@ -30,6 +47,11 @@ interface Challenge {
     };
     title: string;
   };
+}
+interface ChallengeOutcome {
+  title: string;
+  id: string;
+  outcomes: string[];
 }
 export default function OngoingChallenges() {
   const searchParams = useSearchParams();
@@ -43,6 +65,21 @@ export default function OngoingChallenges() {
       ),
     enabled: !!fixtureId,
   });
+  const [selectedChallenge, setSelectedChallenge] =
+    React.useState<ChallengeOutcome | null>(null);
+  const [selectedOutcome, setSelectedOutcome] = React.useState("");
+
+  const handleChallengeSelect = (challengeId: string) => {
+    const challenge = data.challenges.find(
+      (c: ChallengeOutcome) => c.id === challengeId,
+    );
+
+    setSelectedChallenge(challenge);
+    // setSelectedOutcome("");
+  };
+  const handleOutcomeSelect = (outcome: string) => {
+    setSelectedOutcome(outcome);
+  };
 
   return (
     <div className="flex flex-col">
@@ -75,15 +112,107 @@ export default function OngoingChallenges() {
               <div className="">
                 {/*  */}
                 {/* Search and Create */}
-                <div className="flex gap-4 mb-3 w-full justify-between">
+                <div className="flex gap-4 mb-3 w-full justify-between items-center">
                   <Input
                     placeholder="Search Duel ..."
                     className="bg-accent h-8 w-[40%] focus-visible:ring-0 border-border border-[1px] rounded-lg"
                   />
-                  <Button size={"sm"} className=" hover:bg-blue-800">
-                    <Plus className="w-4 h-4" />
-                    Create Duel
-                  </Button>
+                  {/* duels */}
+                  <Dialog
+                    onOpenChange={(open) => {
+                      if (!open) {
+                        setSelectedChallenge(null);
+                        setSelectedOutcome("");
+                      }
+                    }}
+                  >
+                    <DialogTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded">
+                      Create Challenge
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Select Challenge Outcome</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 mt-4">
+                        {/* Challenge Selection Dropdown */}
+                        <Select onValueChange={handleChallengeSelect}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a challenge">
+                              {selectedChallenge?.title || "Select a challenge"}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {data.challenges.map(
+                              (challenge: ChallengeOutcome) => (
+                                <SelectItem
+                                  key={challenge.id}
+                                  value={challenge.id}
+                                  className=" cursor-pointer"
+                                >
+                                  {challenge.title}
+                                </SelectItem>
+                              ),
+                            )}
+                          </SelectContent>
+                        </Select>
+                        {/* Outcome Buttons */}
+                        {selectedChallenge && (
+                          <div className="space-y-2 mt-4">
+                            <h3 className="font-medium">
+                              Select Outcome for: {selectedChallenge.title}
+                            </h3>
+                            <div className="flex gap-2">
+                              {selectedChallenge.outcomes &&
+                                selectedChallenge.outcomes.map(
+                                  (outcome: string) => (
+                                    <Button
+                                      key={outcome}
+                                      variant={
+                                        selectedOutcome === outcome
+                                          ? "default"
+                                          : "outline"
+                                      }
+                                      onClick={() =>
+                                        handleOutcomeSelect(outcome)
+                                      }
+                                    >
+                                      {outcome}
+                                    </Button>
+                                  ),
+                                )}
+                            </div>
+                          </div>
+                        )}
+                        {/* Selected Outcome Display */}
+                        {selectedOutcome && (
+                          <div className="mt-4">
+                            <p>
+                              Selected Outcome:{" "}
+                              <span className=" text-primary-foreground">
+                                {selectedOutcome}
+                              </span>
+                            </p>
+                          </div>
+                        )}
+                        {/* Submit Button */}
+                        <Button
+                          variant="default"
+                          className="w-full mt-4"
+                          disabled={!selectedOutcome}
+                          onClick={() => {
+                            // Handle submission logic here
+                            console.log("Submitting:", {
+                              challenge: selectedChallenge,
+                              outcome: selectedOutcome,
+                            });
+                          }}
+                        >
+                          Submit
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                  {/* end */}
                 </div>
 
                 {/* Match Details */}
