@@ -31,11 +31,12 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import {
+  Select,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Select, SelectItem } from "@radix-ui/react-select";
 
 interface Challenge {
   id: string;
