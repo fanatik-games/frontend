@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect } from "react";
 import {
   Card,
@@ -10,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { API_URL } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
@@ -19,7 +17,6 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import BallIcon from "@/components/icons/ball-icon";
 import { format } from "date-fns";
-import CreateDuel from "@/components/createDuels";
 import {
   Dialog,
   DialogContent,
@@ -37,6 +34,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 interface Challenge {
   id: string;
@@ -76,10 +75,52 @@ export default function OngoingChallenges() {
     );
 
     setSelectedChallenge(challenge);
-    // setSelectedOutcome("");
   };
+
   const handleOutcomeSelect = (outcome: string) => {
     setSelectedOutcome(outcome);
+  };
+  const [amount, setAmount] = React.useState(0);
+  const [userData, setUserData] = React.useState(
+    typeof window !== "undefined" && localStorage.getItem("userData")
+      ? JSON.parse(localStorage.getItem("userData") as string)
+      : null,
+  );
+
+  const submitChallenge = async () => {
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    try {
+      const response = await fetch(`${API_URL}/predictions/create-h2h`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fixtureId: fixtureId,
+          marketId: selectedChallenge?.id,
+          outcome: selectedOutcome,
+          amount: amount,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to create prediction");
+      }
+      return result;
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message === "You do not have enough FC"
+      ) {
+        toast.error("You do not have enough FC to place this bet");
+      }
+      console.error("Error creating prediction:", error);
+      throw error;
+    }
   };
 
   return (
@@ -131,10 +172,20 @@ export default function OngoingChallenges() {
                       Create Challenge
                     </DialogTrigger>
                     <DialogContent className="max-w-md">
-                      <DialogHeader>
-                        <DialogTitle>Select Challenge Outcome</DialogTitle>
+                      <DialogHeader className=" my-0">
+                        <DialogTitle className=" text-left font-medium my-0">
+                          Select Challenge Outcome
+                        </DialogTitle>
                       </DialogHeader>
-                      <div className="space-y-4 mt-2">
+
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center text-sm">
+                          <p className=" text-left">{data.fixture.title}</p>
+                          <div className="text-sm text-primary">
+                            Kickoff Time:{" "}
+                            {format(data.fixture.metadata.date, "HH:mm")}
+                          </div>
+                        </div>
                         {/* Challenge Selection Dropdown */}
                         <Select onValueChange={handleChallengeSelect}>
                           <SelectTrigger className="w-full">
@@ -159,9 +210,6 @@ export default function OngoingChallenges() {
                         {/* Outcome Buttons */}
                         {selectedChallenge && (
                           <div className="space-y-2 mt-4">
-                            <h3 className="font-medium">
-                              Select Outcome for: {selectedChallenge.title}
-                            </h3>
                             <div className="flex gap-2 w-[100%]">
                               {selectedChallenge.outcomes &&
                                 selectedChallenge.outcomes.map(
@@ -194,41 +242,52 @@ export default function OngoingChallenges() {
                                   ),
                                 )}
                             </div>
+                            <div className="space-y-2">
+                              <div className="flex justify-between items-center text-primary">
+                                <Label htmlFor="amount">Stake Amount</Label>
+                                <h3 className="">Balance: {userData}.00</h3>
+                              </div>
+
+                              <Input
+                                onChange={(e) =>
+                                  setAmount(Number(e.target.value))
+                                }
+                                type="number"
+                                id="amount"
+                                placeholder="Enter amount"
+                                className="bg-accent"
+                              />
+                            </div>
                           </div>
                         )}
                         {/* Selected Outcome Display */}
-                        {selectedOutcome && (
-                          <div className="mt-4 ">
-                            <p>
-                              Selected Outcome:{" "}
-                              <span className=" text-primary">
-                                {selectedChallenge?.title ===
-                                "who will win the match"
-                                  ? selectedOutcome === "1"
-                                    ? "Home"
-                                    : selectedOutcome === "x"
-                                      ? "Draw"
-                                      : "Away"
-                                  : selectedOutcome}
-                              </span>
-                            </p>
-                          </div>
-                        )}
+
                         {/* Submit Button */}
-                        <Button
-                          variant="default"
-                          className="w-full mt-4"
-                          disabled={!selectedOutcome}
-                          onClick={() => {
-                            // Handle submission logic here
-                            console.log("Submitting:", {
-                              challenge: selectedChallenge,
-                              outcome: selectedOutcome,
-                            });
-                          }}
-                        >
-                          Submit
-                        </Button>
+
+                        <div className="space-y-2">
+                          <Button
+                            variant="default"
+                            className="w-full"
+                            disabled={
+                              !selectedOutcome || userData <= 0 || amount <= 0
+                            }
+                            onClick={submitChallenge}
+                          >
+                            Submit
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            className="w-full"
+                            disabled={!selectedOutcome}
+                            onClick={() => {
+                              const challengeLink = `${window.location.origin}/challenge/${selectedChallenge?.id}?outcome=${selectedOutcome}`;
+                              navigator.clipboard.writeText(challengeLink);
+                            }}
+                          >
+                            Share Challenge Link
+                          </Button>
+                        </div>
                       </div>
                     </DialogContent>
                   </Dialog>

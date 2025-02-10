@@ -43,7 +43,6 @@ export default function Fixtures() {
       );
     }
   }, [data]);
-  console.log(data, "data challenges");
 
   if (error) {
     return <div>Error: Could not fetch fixtures</div>;
