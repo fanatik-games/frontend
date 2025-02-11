@@ -56,6 +56,7 @@ const AccountPage = () => {
           },
         });
         const responseData = await response.json();
+        localStorage.setItem("userData", JSON.stringify(responseData.balance));
         setIsLoading(false);
         setUserData(responseData);
       } catch (error) {

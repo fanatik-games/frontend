@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect } from "react";
 import {
   Card,
@@ -10,7 +9,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { API_URL } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
@@ -19,6 +17,25 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import BallIcon from "@/components/icons/ball-icon";
 import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 interface Challenge {
   id: string;
@@ -30,6 +47,11 @@ interface Challenge {
     };
     title: string;
   };
+}
+interface ChallengeOutcome {
+  title: string;
+  id: string;
+  outcomes: string[];
 }
 export default function OngoingChallenges() {
   const searchParams = useSearchParams();
@@ -43,6 +65,63 @@ export default function OngoingChallenges() {
       ),
     enabled: !!fixtureId,
   });
+  const [selectedChallenge, setSelectedChallenge] =
+    React.useState<ChallengeOutcome | null>(null);
+  const [selectedOutcome, setSelectedOutcome] = React.useState("");
+
+  const handleChallengeSelect = (challengeId: string) => {
+    const challenge = data.challenges.find(
+      (c: ChallengeOutcome) => c.id === challengeId,
+    );
+
+    setSelectedChallenge(challenge);
+  };
+
+  const handleOutcomeSelect = (outcome: string) => {
+    setSelectedOutcome(outcome);
+  };
+  const [amount, setAmount] = React.useState(0);
+  const [userData, setUserData] = React.useState(
+    typeof window !== "undefined" && localStorage.getItem("userData")
+      ? JSON.parse(localStorage.getItem("userData") as string)
+      : null,
+  );
+
+  const submitChallenge = async () => {
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    try {
+      const response = await fetch(`${API_URL}/predictions/create-h2h`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fixtureId: fixtureId,
+          marketId: selectedChallenge?.id,
+          outcome: selectedOutcome,
+          amount: amount,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to create prediction");
+      }
+      return result;
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message === "You do not have enough FC"
+      ) {
+        toast.error("You do not have enough FC to place this bet");
+      }
+      console.error("Error creating prediction:", error);
+      throw error;
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -75,15 +154,144 @@ export default function OngoingChallenges() {
               <div className="">
                 {/*  */}
                 {/* Search and Create */}
-                <div className="flex gap-4 mb-3 w-full justify-between">
+                <div className="flex gap-4 mb-3 w-full justify-between items-center">
                   <Input
                     placeholder="Search Duel ..."
                     className="bg-accent h-8 w-[40%] focus-visible:ring-0 border-border border-[1px] rounded-lg"
                   />
-                  <Button size={"sm"} className=" hover:bg-blue-800">
-                    <Plus className="w-4 h-4" />
-                    Create Duel
-                  </Button>
+                  {/* duels */}
+                  <Dialog
+                    onOpenChange={(open) => {
+                      if (!open) {
+                        setSelectedChallenge(null);
+                        setSelectedOutcome("");
+                      }
+                    }}
+                  >
+                    <DialogTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded">
+                      Create Challenge
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader className=" my-0">
+                        <DialogTitle className=" text-left font-medium my-0">
+                          Select Challenge Outcome
+                        </DialogTitle>
+                      </DialogHeader>
+
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center text-sm">
+                          <p className=" text-left">{data.fixture.title}</p>
+                          <div className="text-sm text-primary">
+                            Kickoff Time:{" "}
+                            {format(data.fixture.metadata.date, "HH:mm")}
+                          </div>
+                        </div>
+                        {/* Challenge Selection Dropdown */}
+                        <Select onValueChange={handleChallengeSelect}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a challenge">
+                              {selectedChallenge?.title || "Select a challenge"}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {data.challenges.map(
+                              (challenge: ChallengeOutcome) => (
+                                <SelectItem
+                                  key={challenge.id}
+                                  value={challenge.id}
+                                  className=" cursor-pointer"
+                                >
+                                  {challenge.title}
+                                </SelectItem>
+                              ),
+                            )}
+                          </SelectContent>
+                        </Select>
+                        {/* Outcome Buttons */}
+                        {selectedChallenge && (
+                          <div className="space-y-2 mt-4">
+                            <div className="flex gap-2 w-[100%]">
+                              {selectedChallenge.outcomes &&
+                                selectedChallenge.outcomes.map(
+                                  (outcome: string) => (
+                                    <Button
+                                      className={
+                                        selectedOutcome === outcome
+                                          ? "border-primary border-2 text-primary-foreground bg-accent flex-1 text-transform: capitalize"
+                                          : "bg-accent  flex-1 text-primary text-transform: capitalize"
+                                      }
+                                      key={outcome}
+                                      variant={
+                                        selectedOutcome === outcome
+                                          ? "default"
+                                          : "outline"
+                                      }
+                                      onClick={() =>
+                                        handleOutcomeSelect(outcome)
+                                      }
+                                    >
+                                      {selectedChallenge.title ===
+                                      "who will win the match"
+                                        ? outcome === "1"
+                                          ? "Home"
+                                          : outcome === "x"
+                                            ? "Draw"
+                                            : "Away"
+                                        : outcome}
+                                    </Button>
+                                  ),
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                              <div className="flex justify-between items-center text-primary">
+                                <Label htmlFor="amount">Stake Amount</Label>
+                                <h3 className="">Balance: {userData}.00</h3>
+                              </div>
+
+                              <Input
+                                onChange={(e) =>
+                                  setAmount(Number(e.target.value))
+                                }
+                                type="number"
+                                id="amount"
+                                placeholder="Enter amount"
+                                className="bg-accent"
+                              />
+                            </div>
+                          </div>
+                        )}
+                        {/* Selected Outcome Display */}
+
+                        {/* Submit Button */}
+
+                        <div className="space-y-2">
+                          <Button
+                            variant="default"
+                            className="w-full"
+                            disabled={
+                              !selectedOutcome || userData <= 0 || amount <= 0
+                            }
+                            onClick={submitChallenge}
+                          >
+                            Submit
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            className="w-full"
+                            disabled={!selectedOutcome}
+                            onClick={() => {
+                              const challengeLink = `${window.location.origin}/challenge/${selectedChallenge?.id}?outcome=${selectedOutcome}`;
+                              navigator.clipboard.writeText(challengeLink);
+                            }}
+                          >
+                            Share Challenge Link
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                  {/* end */}
                 </div>
 
                 {/* Match Details */}
