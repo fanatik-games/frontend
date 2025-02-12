@@ -60,9 +60,10 @@ export default function OngoingChallenges() {
 
   const fixtureId = searchParams.get("fixture");
   const challengeId = searchParams.get("challenge");
+  const h2h = searchParams.get("h2h");
 
   const [dialogOpen, setDialogOpen] = useState(
-    challengeId && challengeId.length > 0 ? true : false,
+    h2h && h2h.length > 0 ? true : false,
   );
 
   const { data } = useQuery({
@@ -171,12 +172,12 @@ export default function OngoingChallenges() {
                   <Button
                     className="bg-primary text-primary-foreground px-4 py-2 rounded"
                     onClick={() => {
-                      if (challengeId) {
+                      if (h2h) {
                         router.push(
                           pathname +
                             "?" +
                             new URLSearchParams({
-                              challengeId,
+                              h2h: "abcd",
                             }).toString(),
                         );
                       }
