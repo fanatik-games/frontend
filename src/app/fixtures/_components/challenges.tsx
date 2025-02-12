@@ -273,6 +273,10 @@ export default function OngoingChallenges() {
                             className="w-full"
                             disabled={!selectedOutcome}
                             onClick={() => {
+                              if (!userData) {
+                                window.location.href = "/login";
+                                return;
+                              }
                               const challengeLink = `${window.location.href}?outcome=${selectedOutcome}&open=${open}`;
                               navigator.clipboard.writeText(challengeLink);
                               toast.success(
