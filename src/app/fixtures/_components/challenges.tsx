@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import { API_URL } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import BallIcon from "@/components/icons/ball-icon";
 import { format } from "date-fns";
 import {
@@ -55,7 +55,15 @@ interface ChallengeOutcome {
 }
 export default function OngoingChallenges() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const fixtureId = searchParams.get("fixture");
+  const challengeId = searchParams.get("challenge");
+
+  const [dialogOpen, setDialogOpen] = useState(
+    challengeId && challengeId.length > 0 ? true : false,
+  );
 
   const { data } = useQuery({
     queryKey: ["challenges", fixtureId],
@@ -159,18 +167,25 @@ export default function OngoingChallenges() {
                     placeholder="Search Duel ..."
                     className="bg-accent h-8 w-[40%] focus-visible:ring-0 border-border border-[1px] rounded-lg"
                   />
-                  {/* duels */}
-                  <Dialog
-                    onOpenChange={(open) => {
-                      if (!open) {
-                        setSelectedChallenge(null);
-                        setSelectedOutcome("");
+
+                  <Button
+                    className="bg-primary text-primary-foreground px-4 py-2 rounded"
+                    onClick={() => {
+                      if (challengeId) {
+                        router.push(
+                          pathname +
+                            "?" +
+                            new URLSearchParams({
+                              challengeId,
+                            }).toString(),
+                        );
                       }
                     }}
                   >
-                    <DialogTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded">
-                      Create Challenge
-                    </DialogTrigger>
+                    Create Challenge
+                  </Button>
+                  {/* duels */}
+                  <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogContent className="max-w-md">
                       <DialogHeader className=" my-0">
                         <DialogTitle className=" text-left font-medium my-0">
