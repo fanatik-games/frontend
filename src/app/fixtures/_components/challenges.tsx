@@ -273,7 +273,7 @@ export default function OngoingChallenges() {
                             className="w-full"
                             disabled={!selectedOutcome}
                             onClick={() => {
-                              if (!userData) {
+                              if (userData) {
                                 window.location.href = "/login";
                                 return;
                               }
