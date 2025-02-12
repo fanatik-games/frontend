@@ -100,7 +100,10 @@ export default function OngoingChallenges() {
                   </Button>
                   <ChallengeModal
                     open={dialogOpen}
-                    onOpenChange={() => handleUrlChange()}
+                    onOpenChange={(v) => {
+                      setDialogOpen(v);
+                      handleUrlChange();
+                    }}
                     fixture={data.fixture}
                     challenges={data.challenges}
                   />
