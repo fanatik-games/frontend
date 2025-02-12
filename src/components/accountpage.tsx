@@ -1,80 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Trophy, XCircle, Wallet, Copy } from "lucide-react";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import PayoutModal from "./payout";
-import { API_URL } from "@/lib/constants";
-import { supabase } from "@/lib/supabase";
+import { useUserProfile } from "@/hooks/user-info";
+
 const AccountPage = () => {
-  const leaderboardData = [
-    { rank: "#1", name: "Benji", amount: "Ksh 1000" },
-    { rank: "#2", name: "Ayee Yooh", amount: "Ksh 950" },
-    { rank: "#3", name: "You", amount: "Ksh 145" },
-  ];
-
-  interface UserData {
-    balance: number;
-    email: string;
-    id: string;
-    losses: number;
-    participatedChallenges: number;
-    phone: string;
-    playthrough: {
-      current: number;
-      target: number;
-    };
-    referralCode: string;
-    referralCount: number;
-    username: string;
-    wins: number;
-  }
-
-  const [userData, setUserData] = React.useState<UserData | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const { data } = await supabase.auth.getSession();
-      const token = data.session?.access_token;
-      try {
-        const response = await fetch(API_URL + "/user/me", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const responseData = await response.json();
-        localStorage.setItem("userData", JSON.stringify(responseData.balance));
-        setIsLoading(false);
-        setUserData(responseData);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  const { data: userData, isLoading } = useUserProfile();
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center min-h-[50vh]">
         <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
+
   return (
-    <div className="">
+    <div className="min-h-[50vh]">
       {userData && (
         <div className="space-y-2">
           <div className="p-2 space-y-2 bg-accent border border-muted/20 rounded-lg">
@@ -89,7 +30,7 @@ const AccountPage = () => {
                   <AvatarFallback className="bg-blue-500 text-white">
                     {userData?.username
                       .split(" ")
-                      .map((word) => word[0])
+                      .map((word: string) => word[0])
                       .join("")
                       .toUpperCase()}
                   </AvatarFallback>
@@ -107,10 +48,10 @@ const AccountPage = () => {
                     <span className=" text-xl">{userData?.balance}.00 FC</span>
                   </div>
                   <div className="limit text-xs">
-                    <span>Min. Withdraw Amount 500 FC</span>
+                    <span>Min. Withdraw Amount 1000 FC</span>
                   </div>
                 </div>
-                <div className=" text-center">
+                <div className="py-3 text-center">
                   <PayoutModal />
                 </div>
               </div>
@@ -151,7 +92,13 @@ const AccountPage = () => {
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                       <div
                         className="bg-green-500 h-2 rounded-full"
-                        style={{ width: "15%" }}
+                        style={{
+                          width:
+                            (userData.playthrough.current /
+                              userData.playthrough.target) *
+                              100 +
+                            "%",
+                        }}
                       ></div>
                     </div>
                     <p className="text-sm text-gray-500 mt-1">

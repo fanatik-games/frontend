@@ -20,6 +20,7 @@ import { API_URL } from "@/lib/constants";
 import useAuth from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 import React from "react";
+import { useUserProfile } from "@/hooks/user-info";
 
 export default function AccountTopUp({ user }: { user?: User }) {
   const [toppingUp, isToppingUp] = useState(false);
@@ -27,6 +28,7 @@ export default function AccountTopUp({ user }: { user?: User }) {
   const [amount, setAmount] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
+  const { data: userData } = useUserProfile();
   const { data } = useRealtime();
   const { session } = useAuth();
 
@@ -61,47 +63,6 @@ export default function AccountTopUp({ user }: { user?: User }) {
 
     isToppingUp(false);
   };
-
-  interface UserData {
-    balance: number;
-    email: string;
-    id: string;
-    losses: number;
-    participatedChallenges: number;
-    phone: string;
-    playthrough: {
-      current: number;
-      target: number;
-    };
-    referralCode: string;
-    referralCount: number;
-    username: string;
-    wins: number;
-  }
-
-  const [userData, setUserData] = React.useState<UserData | null>(null);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const { data } = await supabase.auth.getSession();
-      const token = data.session?.access_token;
-      try {
-        const response = await fetch(API_URL + "/user/me", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const responseData = await response.json();
-
-        setUserData(responseData);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   useEffect(() => {
     if (data) {
@@ -154,7 +115,7 @@ export default function AccountTopUp({ user }: { user?: User }) {
                 <Input
                   type="text"
                   id="phone"
-                  value={phoneNumber}
+                  value={userData?.phone ?? phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   placeholder="Example: 0720234345"
                 />

@@ -66,9 +66,9 @@ export function UserNav({ user }: { user?: User }) {
                 </span>
               </div>
             </DialogTrigger>
-            <DialogContent className="max-w-sm p-2 h-fit">
-              <DialogHeader>
-                <DialogTitle>Account</DialogTitle>
+            <DialogContent className="max-w-sm p-2 h-fit space-y-0 gap-2">
+              <DialogHeader className="">
+                <DialogTitle className="text-2xl">User Profile</DialogTitle>
               </DialogHeader>
               <AccountPage />
             </DialogContent>
