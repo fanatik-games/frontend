@@ -86,7 +86,7 @@ export default function OngoingChallenges() {
       ? JSON.parse(localStorage.getItem("userData") as string)
       : null,
   );
-
+  const [open, setOpen] = React.useState(false);
   const submitChallenge = async () => {
     const { data } = await supabase.auth.getSession();
     const token = data.session?.access_token;
@@ -160,14 +160,7 @@ export default function OngoingChallenges() {
                     className="bg-accent h-8 w-[40%] focus-visible:ring-0 border-border border-[1px] rounded-lg"
                   />
                   {/* duels */}
-                  <Dialog
-                    onOpenChange={(open) => {
-                      if (!open) {
-                        setSelectedChallenge(null);
-                        setSelectedOutcome("");
-                      }
-                    }}
-                  >
+                  <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded">
                       Create Challenge
                     </DialogTrigger>
@@ -177,7 +170,6 @@ export default function OngoingChallenges() {
                           Select Challenge Outcome
                         </DialogTitle>
                       </DialogHeader>
-
                       <div className="space-y-3">
                         <div className="flex justify-between items-center text-sm">
                           <p className=" text-left">{data.fixture.title}</p>
@@ -281,8 +273,15 @@ export default function OngoingChallenges() {
                             className="w-full"
                             disabled={!selectedOutcome}
                             onClick={() => {
-                              const challengeLink = `${window.location.origin}/challenge/${selectedChallenge?.id}?outcome=${selectedOutcome}`;
+                              if (userData) {
+                                window.location.href = "/login";
+                                return;
+                              }
+                              const challengeLink = `${window.location.href}?outcome=${selectedOutcome}&open=${open}`;
                               navigator.clipboard.writeText(challengeLink);
+                              toast.success(
+                                "Challenge link copied to clipboard!",
+                              );
                             }}
                           >
                             Share Challenge Link
