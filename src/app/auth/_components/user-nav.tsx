@@ -16,68 +16,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { API_URL } from "@/lib/constants";
+import { useUserProfile } from "@/hooks/user-info";
 import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { Loader2 } from "lucide-react";
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
 import { useState } from "react";
 
 export function UserNav({ user }: { user?: User }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const getUserName = (user: User) => {
-    if (!user) return "Guest";
-    if (user.user_metadata && user.user_metadata.name) {
-      return user.user_metadata.name;
-    }
-
-    return "Anonymous: " + user.id.split("-")[0];
-  };
-
-  interface UserData {
-    balance: number;
-    email: string;
-    id: string;
-    losses: number;
-    participatedChallenges: number;
-    phone: string;
-    playthrough: {
-      current: number;
-      target: number;
-    };
-    referralCode: string;
-    referralCount: number;
-    username: string;
-    wins: number;
-  }
-
-  const [userData, setUserData] = React.useState<UserData | null>(null);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const { data } = await supabase.auth.getSession();
-      const token = data.session?.access_token;
-      try {
-        const response = await fetch(API_URL + "/user/me", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const responseData = await response.json();
-        setUserData(responseData);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  const { data: userData } = useUserProfile();
 
   return (
     <DropdownMenu>
@@ -105,15 +56,6 @@ export function UserNav({ user }: { user?: User }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {/* <Link href="/account">
-            <DropdownMenuItem className="flex flex-col justify-start items-start">
-              <span className="text-base text-neutral-600">Account</span>
-              <span className="text-xs text-neutral-500 font-medium">
-                This is where you will be able to access your account
-                information.
-              </span>
-            </DropdownMenuItem>
-          </Link> */}
           <Dialog>
             <DialogTrigger asChild>
               <div className="flex flex-col p-2 cursor-pointer hover:bg-accent rounded-md">
