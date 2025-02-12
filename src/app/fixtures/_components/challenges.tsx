@@ -172,15 +172,13 @@ export default function OngoingChallenges() {
                   <Button
                     className="bg-primary text-primary-foreground px-4 py-2 rounded"
                     onClick={() => {
-                      if (h2h) {
-                        router.push(
-                          pathname +
-                            "?" +
-                            new URLSearchParams({
-                              h2h: "abcd",
-                            }).toString(),
-                        );
-                      }
+                      router.push(
+                        pathname +
+                          "?" +
+                          new URLSearchParams({
+                            h2h: "abcd",
+                          }).toString(),
+                      );
                     }}
                   >
                     Create Challenge
