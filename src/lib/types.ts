@@ -5,6 +5,9 @@ export interface Challenge {
   market: Market;
   reportedAt: string;
   reportedOutcome: string;
+  fixture: Fixture;
+  acceptingUserId: string;
+  creatingUserId: string;
   creatingUser: {
     id: string;
     username: string;

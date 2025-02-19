@@ -122,6 +122,7 @@ export default function OngoingChallenges() {
                         <ChallengeItem
                           key={challenge.id}
                           challenge={challenge}
+                          fixture={data.fixture}
                         />
                       ))}
                     </div>

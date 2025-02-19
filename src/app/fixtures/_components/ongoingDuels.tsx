@@ -1,58 +1,27 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import BallIcon from "@/components/icons/ball-icon";
+import { API_URL } from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
+import useAuth from "@/hooks/useAuth";
+import { Challenge } from "@/lib/types";
+import { format } from "date-fns";
 
 export default function OngoingDuels() {
-  const matches = [
-    {
-      date: "05/02/2025 3:00 p.m",
-      teams: "Arsenal vs Man City",
-      league: "EPL",
-      predictions: [
-        {
-          type: "Both Teams To Score",
-          stake: "1500.00 F.C",
-          prediction: "YES",
+  const { session } = useAuth();
+
+  const { data } = useQuery<Challenge[]>({
+    queryKey: ["my-challenges"],
+    queryFn: () =>
+      fetch(API_URL + `/predictions/my-challenges`, {
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
         },
-        {
-          type: "Match Outcome",
-          stake: "1500.00 F.C",
-          prediction: "Home Win",
-        },
-      ],
-    },
-    {
-      date: "05/02/2025 3:00 p.m",
-      teams: "Brest vs Real Madrid",
-      league: "UCL",
-      predictions: [
-        {
-          type: "Will Mbappe Score ?",
-          stake: "1500.00 F.C",
-          prediction: "YES",
-        },
-        {
-          type: "Match Outcome",
-          stake: "1500.00 F.C",
-          prediction: "Home Win",
-        },
-      ],
-    },
-    {
-      date: "05/02/2025 3:00 p.m",
-      teams: "Aston Villa vs Celtic",
-      league: "UCL",
-      predictions: [
-        {
-          type: "Match Outcome",
-          stake: "1500.00 F.C",
-          prediction: "Home Win",
-        },
-      ],
-    },
-  ];
+      }).then((res) => res.json()),
+    enabled: !!session,
+  });
 
   return (
     <div className=" h-full overflow-y-auto">
@@ -63,41 +32,44 @@ export default function OngoingDuels() {
         </p>
       </div>
       <ScrollArea className="h-[50vh]">
-        {matches.map((match, index) => (
+        {data?.map((challenge, index) => (
           <div key={index} className="my-4 space-y-2  ">
             <div className=" flex flex-col space-y-2 mt-2">
               <div className=" grid space-y-1">
                 <div className="text-md  text-muted  flex gap-1 shadow-none px-4">
-                  {match.league}
-                  <p className=" text-black ">{match.date}</p>
+                  {challenge.fixture.metadata.competition}
+                  <p className=" text-black ">
+                    {format(
+                      challenge.fixture.metadata.date!,
+                      "dd/mm/yyyy HH:mm",
+                    )}
+                  </p>
                 </div>
                 <div className="px-4 flex text-lg items-center gap-2 mb-4">
                   <BallIcon />
-                  {match.teams}
+                  {challenge.fixture.title}
                 </div>
               </div>
 
-              {match.predictions.map((pred, predIndex) => (
-                <div
-                  key={predIndex}
-                  className="bg-accent py-2 mb-2 last:mb-0 px-12 "
-                >
-                  <div className="font-medium">{pred.type}</div>
-                  <div className="text-sm text-muted flex gap-2 items-center">
-                    Stake Amount:{" "}
-                    <Image
-                      width="25"
-                      height="25"
-                      src="https://img.icons8.com/arcade/64/coins--v1.png"
-                      alt="coins--v1"
-                    />{" "}
-                    {pred.stake}
-                  </div>
-                  <div className="text-sm text-muted">
-                    Prediction: {pred.prediction}
-                  </div>
+              <div className="bg-accent py-2 mb-2 last:mb-0 px-12 ">
+                <div className="font-medium">{challenge.market.title}</div>
+                <div className="text-sm text-muted flex gap-2 items-center">
+                  Stake Amount:
+                  <Image
+                    width="25"
+                    height="25"
+                    src="https://img.icons8.com/arcade/64/coins--v1.png"
+                    alt="coins--v1"
+                  />{" "}
+                  {challenge.amount.toFixed(2)}
                 </div>
-              ))}
+                <div className="text-sm text-muted">
+                  Prediction:
+                  {challenge.creatingUserId === session?.user.id
+                    ? challenge.creatingUserPrediction
+                    : challenge.acceptingUserPrediction}
+                </div>
+              </div>
             </div>
           </div>
         ))}

@@ -19,20 +19,24 @@ import useAuth from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/user-info";
 import { API_URL } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
-import { ChallengeOutcome, Fixture, Market } from "@/lib/types";
+import { Challenge, ChallengeOutcome, Fixture, Market } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function ChallengeModal({
-  open,
-  onOpenChange,
   fixture,
+  open,
+  challenge,
+  onOpenChange,
+  isJoining,
 }: {
   open: boolean;
   fixture: Fixture;
+  challenge?: Challenge;
   onOpenChange: (open: boolean) => void;
+  isJoining?: boolean;
 }) {
   const [selectedMarket, setSelectedMarket] = useState<ChallengeOutcome | null>(
     null,
@@ -113,7 +117,7 @@ export default function ChallengeModal({
           <div className="flex justify-between items-center text-sm">
             <p className="text-left">{fixture.title}</p>
             <div className="text-sm text-primary">
-              Kickoff Time: {format(fixture.metadata.date, "HH:mm")}
+              Kickoff Time: {format(fixture.metadata.date!, "HH:mm")}
             </div>
           </div>
           {/* Challenge Selection Dropdown */}
