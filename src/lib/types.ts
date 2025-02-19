@@ -5,8 +5,14 @@ export interface Challenge {
   market: Market;
   reportedAt: string;
   reportedOutcome: string;
-  creatingUser: any;
-  acceptingUser: any;
+  creatingUser: {
+    id: string;
+    username: string;
+  };
+  acceptingUser: {
+    id: string;
+    username: string;
+  };
   creatingUserPrediction: string;
   acceptingUserPrediction: string;
 }
