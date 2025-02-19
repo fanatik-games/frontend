@@ -70,14 +70,17 @@ export function LoginForm() {
     if (!error) {
       const token = data.session?.access_token;
       if (!token) return;
-      const userCreatedAt = new Date(data.user?.created_at ?? "");
-      const tenSecondsAgo = new Date(Date.now() - 10000);
-
-      if (userCreatedAt > tenSecondsAgo) {
+      console.log(data.user?.app_metadata.provider === "phone");
+      if (!data.user?.user_metadata.username) {
         setUsernamePromptIsShown(true);
       } else {
         router.push("/");
       }
+      // if (data.user?.email && data.user.user_metadata) {
+      //   setUsernamePromptIsShown(true);
+      // } else {
+      //   router.push("/");
+      // }
     }
 
     if (error) {
@@ -133,7 +136,7 @@ export function LoginForm() {
                         type="tel"
                         placeholder="Example: 0720123234"
                         onChange={(e) => setPhone(e.target.value)}
-                        className=" border-border text-muted focus-visible:border-border focus-visible:ring-0 bg-accent "
+                        className="text-primary border-border focus-visible:border-border focus-visible:ring-0 bg-accent "
                       />
                     </div>
 
