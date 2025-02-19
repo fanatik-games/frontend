@@ -1,13 +1,14 @@
 export interface Challenge {
   id: string;
+  amount: number;
   title: string;
-  fixtures: {
-    metadata: {
-      tournament: string;
-      date: string;
-    };
-    title: string;
-  };
+  market: Market;
+  reportedAt: string;
+  reportedOutcome: string;
+  creatingUser: any;
+  acceptingUser: any;
+  creatingUserPrediction: string;
+  acceptingUserPrediction: string;
 }
 
 export interface ChallengeOutcome {
@@ -23,6 +24,13 @@ export type Fixture = {
     competition: string;
     date: string;
   };
+};
+
+export type Market = {
+  id: string;
+  title: string;
+  outcomes: string[];
+  fixtures: Fixture;
 };
 
 export type UserData = {

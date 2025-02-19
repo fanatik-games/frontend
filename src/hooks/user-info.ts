@@ -1,8 +1,9 @@
 import { API_URL } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
+import { Session } from "@supabase/supabase-js";
 import { useQuery } from "@tanstack/react-query";
 
-export const useUserProfile = () => {
+export const useUserProfile = (session?: Session) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["user-profile"],
     queryFn: async () => {

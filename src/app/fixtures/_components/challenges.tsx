@@ -21,12 +21,14 @@ import { useEffect, useState } from "react";
 import ChallengeModal from "./challenge-modal";
 import { PlusIcon } from "lucide-react";
 import ChallengeItem from "./challenge-item";
+import useAuth from "@/hooks/useAuth";
 
 export default function OngoingChallenges() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const fixtureId = searchParams.get("fixture");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { session } = useAuth();
 
   useEffect(() => {
     if (!searchParams) return;
@@ -37,10 +39,12 @@ export default function OngoingChallenges() {
   const { data } = useQuery({
     queryKey: ["challenges", fixtureId],
     queryFn: () =>
-      fetch(API_URL + `/fixtures/challenges?fixtureId=${fixtureId}`).then(
-        (res) => res.json(),
-      ),
-    enabled: !!fixtureId,
+      fetch(API_URL + `/fixtures/challenges?fixtureId=${fixtureId}`, {
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+      }).then((res) => res.json()),
+    enabled: !!fixtureId && !!session,
   });
 
   const handleUrlChange = () => {
@@ -105,7 +109,6 @@ export default function OngoingChallenges() {
                       handleUrlChange();
                     }}
                     fixture={data.fixture}
-                    challenges={data.challenges}
                   />
                 </div>
 

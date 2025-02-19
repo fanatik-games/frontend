@@ -15,10 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useAuth from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/user-info";
 import { API_URL } from "@/lib/constants";
 import { supabase } from "@/lib/supabase";
-import { ChallengeOutcome, Fixture } from "@/lib/types";
+import { ChallengeOutcome, Fixture, Market } from "@/lib/types";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -26,28 +28,37 @@ import { toast } from "sonner";
 export default function ChallengeModal({
   open,
   onOpenChange,
-  challenges,
   fixture,
 }: {
   open: boolean;
-  challenges: ChallengeOutcome[];
   fixture: Fixture;
   onOpenChange: (open: boolean) => void;
 }) {
-  const [selectedChallenge, setSelectedChallenge] =
-    useState<ChallengeOutcome | null>(null);
+  const [selectedMarket, setSelectedMarket] = useState<ChallengeOutcome | null>(
+    null,
+  );
   const [selectedOutcome, setSelectedOutcome] = useState("");
   const [amount, setAmount] = useState(0);
+  const { session } = useAuth();
 
   const { data: user } = useUserProfile();
   const userBalance = user?.balance || 0;
 
+  const { data: markets } = useQuery<Market[]>({
+    queryKey: ["markets", fixture.id],
+    queryFn: () =>
+      fetch(API_URL + `/predictions/markets?fixtureId=${fixture.id}`, {
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+      }).then((res) => res.json()),
+    enabled: !!fixture.id && !!session,
+  });
+
   const handleChallengeSelect = (challengeId: string) => {
-    const challenge = challenges.find(
-      (c: ChallengeOutcome) => c.id === challengeId,
-    );
-    if (!challenge) return;
-    setSelectedChallenge(challenge);
+    const market = markets?.find((c: Market) => c.id === challengeId);
+    if (!market) return;
+    setSelectedMarket(market);
   };
 
   const handleOutcomeSelect = (outcome: string) => {
@@ -55,8 +66,7 @@ export default function ChallengeModal({
   };
 
   const submitChallenge = async () => {
-    const { data } = await supabase.auth.getSession();
-    const token = data.session?.access_token;
+    const token = session?.access_token;
     try {
       const response = await fetch(`${API_URL}/predictions/create-h2h`, {
         method: "POST",
@@ -66,7 +76,7 @@ export default function ChallengeModal({
         },
         body: JSON.stringify({
           fixtureId: fixture.id,
-          marketId: selectedChallenge?.id,
+          marketId: selectedMarket?.id,
           outcome: selectedOutcome,
           amount: amount,
         }),
@@ -110,11 +120,11 @@ export default function ChallengeModal({
           <Select onValueChange={handleChallengeSelect}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a challenge">
-                {selectedChallenge?.title || "Select a challenge"}
+                {selectedMarket?.title || "Select a challenge"}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {challenges.map((challenge: ChallengeOutcome) => (
+              {markets?.map((challenge: Market) => (
                 <SelectItem
                   key={challenge.id}
                   value={challenge.id}
@@ -126,11 +136,11 @@ export default function ChallengeModal({
             </SelectContent>
           </Select>
           {/* Outcome Buttons */}
-          {selectedChallenge && (
+          {selectedMarket && (
             <div className="space-y-2 mt-4">
               <div className="flex gap-2 w-[100%]">
-                {selectedChallenge.outcomes &&
-                  selectedChallenge.outcomes.map((outcome: string) => (
+                {selectedMarket.outcomes &&
+                  selectedMarket.outcomes.map((outcome: string) => (
                     <Button
                       className={
                         selectedOutcome === outcome
@@ -143,7 +153,7 @@ export default function ChallengeModal({
                       }
                       onClick={() => handleOutcomeSelect(outcome)}
                     >
-                      {selectedChallenge.title === "who will win the match"
+                      {selectedMarket.title === "who will win the match"
                         ? outcome === "1"
                           ? "Home"
                           : outcome === "x"
@@ -188,7 +198,7 @@ export default function ChallengeModal({
               className="w-full"
               disabled={!selectedOutcome}
               onClick={() => {
-                const challengeLink = `${window.location.origin}/challenge/${selectedChallenge?.id}?outcome=${selectedOutcome}`;
+                const challengeLink = `${window.location.origin}/challenge/${selectedMarket?.id}?outcome=${selectedOutcome}`;
                 navigator.clipboard.writeText(challengeLink);
               }}
             >

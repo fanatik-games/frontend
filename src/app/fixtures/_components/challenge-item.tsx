@@ -8,7 +8,7 @@ export default function ChallengeItem({ challenge }: { challenge: Challenge }) {
       <div className="">
         <h3 className="text-md capitalize">{challenge.title}</h3>
         <div className="text-sm text-muted flex gap-2 items-center">
-          Stake Amount:{" "}
+          Stake Amount: {Number(challenge.amount).toFixed(2)} FC
           <Image
             width="20"
             height="20"
@@ -16,8 +16,12 @@ export default function ChallengeItem({ challenge }: { challenge: Challenge }) {
             alt="coins--v1"
           />{" "}
         </div>
-        <div className="text-sm text-muted">Created By: </div>
-        <div className="text-sm text-muted">Prediction: </div>
+        <div className="text-sm text-muted">
+          Created By: {challenge.creatingUser?.username}
+        </div>
+        <div className="text-sm text-muted">
+          Prediction: {challenge.creatingUserPrediction}
+        </div>
         <Button
           size={"sm"}
           className="mt-2 hover:bg-blue-primay text-primary-foreground"
