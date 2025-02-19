@@ -85,7 +85,7 @@ export default function OngoingDuels() {
               src="https://img.icons8.com/arcade/64/coins--v1.png"
               alt="coins--v1"
             />{" "}
-            <span>7500.00 F.C</span>
+            <span>{Number(0).toFixed(2)} F.C</span>
           </div>
           <div className="flex items-center gap-4 text-green-600">
             <span className="text-[#19B270] text-sm">Est. Winnings</span>
@@ -95,7 +95,7 @@ export default function OngoingDuels() {
               src="https://img.icons8.com/arcade/64/coins--v1.png"
               alt="coins--v1"
             />{" "}
-            <span className=" text-primary ">7500.00 F.C</span>
+            <span className=" text-primary ">{Number(0).toFixed(2)} F.C</span>
           </div>
         </div>
       </div>
