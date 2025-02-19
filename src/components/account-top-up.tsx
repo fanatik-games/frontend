@@ -84,9 +84,9 @@ export default function AccountTopUp({ user }: { user?: User }) {
 
   return (
     <div className="flex items-center gap-2">
-      {!userData?.bonusEligible ? (
-        <div className="px-4 py-1 rounded-md bg-orange-400/20 text-orange-500 font-semibold">
-          Get 15% Extra on first deposit
+      {userData?.bonusEligible ? (
+        <div className="px-2 py-2 text-xs rounded-md bg-orange-400/20 text-orange-500 ">
+          Get +15% on first deposit
         </div>
       ) : null}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
