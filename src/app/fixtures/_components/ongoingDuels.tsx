@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import Image from "next/image";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import BallIcon from "@/components/icons/ball-icon";
-import { API_URL } from "@/lib/constants";
+import { API_URL, PLATFORM_FEES } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "@/hooks/useAuth";
 import { Challenge } from "@/lib/types";
@@ -22,6 +22,22 @@ export default function OngoingDuels() {
       }).then((res) => res.json()),
     enabled: !!session,
   });
+
+  const totalStake = useMemo(() => {
+    return (
+      data?.reduce((acc, challenge) => {
+        return acc + challenge.amount;
+      }, 0) || 0
+    );
+  }, [data]);
+
+  const estimatedWinnings = useMemo(() => {
+    return (
+      data?.reduce((acc, challenge) => {
+        return acc + challenge.amount * 2 * (1 - PLATFORM_FEES);
+      }, 0) || 0
+    );
+  }, [data]);
 
   return (
     <div className=" h-full overflow-y-auto">
@@ -85,7 +101,7 @@ export default function OngoingDuels() {
               src="https://img.icons8.com/arcade/64/coins--v1.png"
               alt="coins--v1"
             />{" "}
-            <span>{Number(0).toFixed(2)} F.C</span>
+            <span>{Number(totalStake).toFixed(2)} F.C</span>
           </div>
           <div className="flex items-center gap-4 text-green-600">
             <span className="text-[#19B270] text-sm">Est. Winnings</span>
@@ -95,7 +111,9 @@ export default function OngoingDuels() {
               src="https://img.icons8.com/arcade/64/coins--v1.png"
               alt="coins--v1"
             />{" "}
-            <span className=" text-primary ">{Number(0).toFixed(2)} F.C</span>
+            <span className=" text-primary ">
+              {Number(estimatedWinnings).toFixed(2)} F.C
+            </span>
           </div>
         </div>
       </div>

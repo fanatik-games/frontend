@@ -38,9 +38,7 @@ export default function ChallengeModal({
   onOpenChange: (open: boolean) => void;
   isJoining?: boolean;
 }) {
-  const [selectedMarket, setSelectedMarket] = useState<ChallengeOutcome | null>(
-    null,
-  );
+  const [selectedMarket, setSelectedMarket] = useState<Market | null>(null);
   const [selectedOutcome, setSelectedOutcome] = useState("");
   const [amount, setAmount] = useState(0);
   const { session } = useAuth();
@@ -71,6 +69,7 @@ export default function ChallengeModal({
 
   const submitChallenge = async () => {
     const token = session?.access_token;
+    const loadingToast = toast.loading("Creating prediction...");
     try {
       const response = await fetch(`${API_URL}/predictions/create-h2h`, {
         method: "POST",
@@ -83,6 +82,7 @@ export default function ChallengeModal({
           marketId: selectedMarket?.id,
           outcome: selectedOutcome,
           amount: amount,
+          ...(isJoining && { challengeId: challenge?.id }),
         }),
       });
 
@@ -91,18 +91,26 @@ export default function ChallengeModal({
       if (!response.ok) {
         throw new Error(result.message || "Failed to create prediction");
       }
+      toast.dismiss(loadingToast);
+      toast.success("H2H created successfully");
+
       return result;
     } catch (error) {
-      if (
-        error instanceof Error &&
-        error.message === "You do not have enough FC"
-      ) {
-        toast.error("You do not have enough FC to place this bet");
+      if (error instanceof Error && error.message) {
+        toast.error("Failed to create H2H challenge: " + error.message);
       }
-      console.error("Error creating prediction:", error);
-      throw error;
+    } finally {
+      toast.dismiss(loadingToast);
+      onOpenChange(false);
     }
   };
+
+  useEffect(() => {
+    if (isJoining && challenge) {
+      setSelectedMarket(challenge.market);
+      setAmount(challenge.amount);
+    }
+  }, [isJoining, challenge]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -120,21 +128,26 @@ export default function ChallengeModal({
               Kickoff Time: {format(fixture.metadata.date!, "HH:mm")}
             </div>
           </div>
+
           {/* Challenge Selection Dropdown */}
-          <Select onValueChange={handleChallengeSelect}>
+          <Select
+            defaultValue={selectedMarket?.id}
+            onValueChange={handleChallengeSelect}
+            disabled={isJoining}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a challenge">
-                {selectedMarket?.title || "Select a challenge"}
+                {selectedMarket?.title}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {markets?.map((challenge: Market) => (
+              {markets?.map((market: Market) => (
                 <SelectItem
-                  key={challenge.id}
-                  value={challenge.id}
-                  className=" cursor-pointer"
+                  key={market.id}
+                  value={market.id}
+                  className="cursor-pointer"
                 >
-                  {challenge.title}
+                  {market.title}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -154,6 +167,10 @@ export default function ChallengeModal({
                       key={outcome}
                       variant={
                         selectedOutcome === outcome ? "default" : "outline"
+                      }
+                      disabled={
+                        isJoining &&
+                        challenge?.creatingUserPrediction === outcome
                       }
                       onClick={() => handleOutcomeSelect(outcome)}
                     >
@@ -177,6 +194,9 @@ export default function ChallengeModal({
                   onChange={(e) => setAmount(Number(e.target.value))}
                   type="number"
                   id="amount"
+                  value={challenge?.amount ?? 10}
+                  readOnly={isJoining}
+                  disabled={isJoining}
                   placeholder="Enter amount"
                   className="bg-accent"
                 />

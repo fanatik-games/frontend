@@ -16,6 +16,18 @@ export default function ChallengeItem({
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const getUserPrediction = (prediction: string) => {
+    if (prediction === "1") {
+      return "Home Win";
+    } else if (prediction === "x") {
+      return "Draw";
+    } else if (prediction === "2") {
+      return "Away Win";
+    } else {
+      return prediction;
+    }
+  };
+
   const handleUrlChange = () => {
     setDialogOpen(true);
     // const url = new URL(window.location.href);
@@ -32,7 +44,7 @@ export default function ChallengeItem({
   return (
     <div className="bg-accent rounded-md p-2">
       <div className="">
-        <h3 className="text-md capitalize">{challenge.title}</h3>
+        <h3 className="text-md capitalize">{challenge.market.title}</h3>
         <div className="text-sm text-muted flex gap-2 items-center">
           Stake Amount: {Number(challenge.amount).toFixed(2)} FC
           <Image
@@ -46,7 +58,7 @@ export default function ChallengeItem({
           Created By: {challenge.creatingUser?.username}
         </div>
         <div className="text-sm text-muted">
-          Prediction: {challenge.creatingUserPrediction}
+          Prediction: {getUserPrediction(challenge.creatingUserPrediction)}
         </div>
         <Button
           size={"sm"}
