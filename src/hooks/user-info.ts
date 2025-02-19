@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 
 export const useUserProfile = () => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["user-profile"],
     queryFn: async () => {
       const { data } = await supabase.auth.getSession();
@@ -18,5 +18,5 @@ export const useUserProfile = () => {
     },
   });
 
-  return { data, isLoading, error };
+  return { data, isLoading, error, refetch };
 };

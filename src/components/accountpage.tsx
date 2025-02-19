@@ -3,6 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Trophy, XCircle, Wallet, Copy } from "lucide-react";
 import PayoutModal from "./payout";
 import { useUserProfile } from "@/hooks/user-info";
+import { Button } from "./ui/button";
+import { MIN_WITHDRAW_AMOUNT } from "@/lib/constants";
 
 const AccountPage = () => {
   const { data: userData, isLoading } = useUserProfile();
@@ -45,15 +47,27 @@ const AccountPage = () => {
                       <Wallet className="w-5 h-5 mr-2 text-blue-500" />
                       <span className="text-xl">Balance:</span>
                     </span>
-                    <span className=" text-xl">{userData?.balance}.00 FC</span>
+                    <span className="text-orange-500 font-semibold text-xl">
+                      {userData?.balance}.00 FC
+                    </span>
                   </div>
                   <div className="limit text-xs">
-                    <span>Min. Withdraw Amount 1000 FC</span>
+                    <span>Min. Withdraw Amount {MIN_WITHDRAW_AMOUNT} FC</span>
                   </div>
                 </div>
-                <div className="py-3 text-center">
-                  <PayoutModal />
-                </div>
+                {userData?.balance >= MIN_WITHDRAW_AMOUNT ? (
+                  <div className="py-3 text-center">
+                    <PayoutModal />
+                  </div>
+                ) : (
+                  <Button
+                    variant={"ghost"}
+                    disabled
+                    className="px-4 py-2 bg-primary/20 rounded-md w-full"
+                  >
+                    Withdraw
+                  </Button>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <span className="flex items-center text-gray-700">
