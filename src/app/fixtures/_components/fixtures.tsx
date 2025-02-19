@@ -35,7 +35,7 @@ export default function Fixtures() {
   }, []);
 
   useEffect(() => {
-    if (data) {
+    if (data && data.length) {
       router.push(
         pathname +
           "?" +
