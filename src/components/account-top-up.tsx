@@ -41,11 +41,14 @@ export default function AccountTopUp({ user }: { user?: User }) {
   const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
     isToppingUp(true);
+
+    console.log({ phoneNumber });
+    return;
     try {
       const request = await fetch(API_URL + "/payments/initiate/purchase", {
         method: "post",
         body: JSON.stringify({
-          phoneNumber: userData?.phone ?? phoneNumber,
+          phoneNumber,
           amount: Number(amount),
         }),
         headers: {
