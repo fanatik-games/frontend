@@ -23,10 +23,14 @@ import { Loader2 } from "lucide-react";
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export function UserNav({ user }: { user?: User }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const pathname = usePathname();
+
+  const isOnMobile = pathname.includes("/m");
 
   const { data: userData } = useUserProfile();
 
@@ -56,8 +60,26 @@ export function UserNav({ user }: { user?: User }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Dialog>
-            <DialogTrigger asChild>
+          {!isOnMobile ? (
+            <Dialog>
+              <DialogTrigger asChild>
+                <div className="flex flex-col p-2 cursor-pointer hover:bg-accent rounded-md">
+                  <span className="text-base text-neutral-600">Account</span>
+                  <span className="text-xs text-neutral-500 font-medium">
+                    This is where you will be able to access your account
+                    information.
+                  </span>
+                </div>
+              </DialogTrigger>
+              <DialogContent className="max-w-sm p-2 h-fit space-y-0 gap-2">
+                <DialogHeader className="">
+                  <DialogTitle className="text-2xl">User Profile</DialogTitle>
+                </DialogHeader>
+                <AccountPage />
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Link href={"/m/account"}>
               <div className="flex flex-col p-2 cursor-pointer hover:bg-accent rounded-md">
                 <span className="text-base text-neutral-600">Account</span>
                 <span className="text-xs text-neutral-500 font-medium">
@@ -65,19 +87,13 @@ export function UserNav({ user }: { user?: User }) {
                   information.
                 </span>
               </div>
-            </DialogTrigger>
-            <DialogContent className="max-w-sm p-2 h-fit space-y-0 gap-2">
-              <DialogHeader className="">
-                <DialogTitle className="text-2xl">User Profile</DialogTitle>
-              </DialogHeader>
-              <AccountPage />
-            </DialogContent>
-          </Dialog>
-          <DropdownMenuItem>
+            </Link>
+          )}
+          {/* <DropdownMenuItem>
             <Link href="/settings" className="text-base text-neutral-600">
               Settings
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
