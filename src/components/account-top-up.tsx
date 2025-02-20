@@ -24,13 +24,19 @@ import { useUserProfile } from "@/hooks/user-info";
 
 export default function AccountTopUp({ user }: { user?: User }) {
   const [toppingUp, isToppingUp] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState(user?.phone ?? "");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
   const { data: userData, refetch: reloadUserInfo } = useUserProfile();
   const { data } = useRealtime();
   const { session } = useAuth();
+
+  useEffect(() => {
+    if (userData && userData.phone) {
+      setPhoneNumber(userData.phone);
+    }
+  }, [userData]);
 
   const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,7 +133,7 @@ export default function AccountTopUp({ user }: { user?: User }) {
                   <Input
                     type="text"
                     id="phone"
-                    value={userData?.phone ?? phoneNumber}
+                    value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     placeholder="Example: 0720234345"
                   />
